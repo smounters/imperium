@@ -1,9 +1,8 @@
 {
   "name": "@smounters/imperium",
   "version": "0.1.0",
-  "description": "NestJS-like modular DI container with unified HTTP + Connect RPC server for TypeScript.",
+  "description": "NestJS-like modular DI container with unified HTTP + Connect RPC server for TypeScript",
   "keywords": [
-    "nestjs",
     "di",
     "dependency-injection",
     "fastify",
@@ -12,9 +11,6 @@
   ],
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     "./core": {
       "types": "./dist/core/index.d.ts",
@@ -68,6 +64,7 @@
     "docs:dev": "pnpm exec vitepress dev docs",
     "docs:build": "pnpm exec vitepress build docs",
     "docs:preview": "pnpm exec vitepress preview docs",
+    "prepack": "pnpm run clean && pnpm run build",
     "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "peerDependencies": {
