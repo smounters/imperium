@@ -8,7 +8,7 @@ on:
       - "v*.*.*"
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
   pages: write
 
@@ -18,9 +18,10 @@ concurrency:
 
 jobs:
   publish_package:
+    name: Publish npm package
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup pnpm
@@ -28,17 +29,17 @@ jobs:
         with:
           version: 10
 
-      - name: Setup Node.js
+      - name: Setup Node.js and npm registry auth
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - name: Install dependencies
+      - name: Install dependencies from lockfile
         run: pnpm install --frozen-lockfile
 
-      - name: Resolve release version from tag
+      - name: Resolve package version from git tag
         id: release
         run: |
           tag="${GITHUB_REF_NAME}"
@@ -51,27 +52,28 @@ jobs:
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-      - name: Sync package version with tag
+      - name: Sync package.json version with tag
         run: pnpm version "${{ steps.release.outputs.version }}" --no-git-tag-version --allow-same-version
 
-      - name: Typecheck package
+      - name: Run typecheck
         run: pnpm run typecheck
 
       - name: Build package
         run: pnpm run build
 
-      - name: Publish to npm
+      - name: Publish package to npm
         run: pnpm publish --access public --no-git-checks --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   build_docs:
+    name: Build documentation
     needs: publish_package
     runs-on: ubuntu-latest
     env:
       DOCS_BASE: /${{ github.event.repository.name }}/
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup pnpm
@@ -85,18 +87,19 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Install dependencies
+      - name: Install dependencies from lockfile
         run: pnpm install --frozen-lockfile
 
-      - name: Build docs
+      - name: Build VitePress docs
         run: pnpm run docs:build
 
-      - name: Upload Pages Artifact
+      - name: Upload docs artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/.vitepress/dist
 
   deploy_docs:
+    name: Deploy documentation
     needs: build_docs
     runs-on: ubuntu-latest
     environment:
@@ -105,3 +108,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  create_release:
+    name: Create GitHub release
+    needs:
+      - publish_package
+      - deploy_docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create release from tag
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
