@@ -1,6 +1,6 @@
-# @cryppex/imperium
+# @smounters/imperium
 
-`@cryppex/imperium` is **inspired by NestJS** and provides a modular DI-first runtime for TypeScript services using Fastify + ConnectRPC.
+`@smounters/imperium` is **inspired by NestJS** and provides a modular DI-first runtime for TypeScript services using Fastify + ConnectRPC.
 
 It is designed for teams that want Nest-like architecture but with explicit control over runtime wiring and exported API surface.
 
@@ -20,16 +20,16 @@ Root import is intentionally disabled.
 
 Use subpaths only:
 
-- `@cryppex/imperium/core`
-- `@cryppex/imperium/decorators`
-- `@cryppex/imperium/services`
-- `@cryppex/imperium/pipes`
-- `@cryppex/imperium/validation`
+- `@smounters/imperium/core`
+- `@smounters/imperium/decorators`
+- `@smounters/imperium/services`
+- `@smounters/imperium/pipes`
+- `@smounters/imperium/validation`
 
 ## Installation
 
 ```bash
-pnpm add @cryppex/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod
+pnpm add @smounters/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod
 ```
 
 TypeScript requirements:
@@ -54,8 +54,8 @@ import "reflect-metadata";
 ```ts
 import "reflect-metadata";
 
-import { Application } from "@cryppex/imperium/core";
-import { Body, HttpController, Injectable, Module, Post } from "@cryppex/imperium/decorators";
+import { Application } from "@smounters/imperium/core";
+import { Body, HttpController, Injectable, Module, Post } from "@smounters/imperium/decorators";
 
 @Injectable()
 class AuthService {
@@ -91,8 +91,8 @@ await app.start({ port: 3000 });
 ## Recommended Bootstrap Flow
 
 ```ts
-import { Application } from "@cryppex/imperium/core";
-import { ConfigService, LoggerService } from "@cryppex/imperium/services";
+import { Application } from "@smounters/imperium/core";
+import { ConfigService, LoggerService } from "@smounters/imperium/services";
 import { z } from "zod";
 
 const appConfigSchema = z.object({
@@ -127,7 +127,7 @@ app.resolve(LoggerService).info({ event: "app.started", port: config.APP_PORT })
 ## Multi Providers
 
 ```ts
-import { InjectAll, Injectable, Module } from "@cryppex/imperium/decorators";
+import { InjectAll, Injectable, Module } from "@smounters/imperium/decorators";
 
 const AML_RULES = Symbol("AML_RULES");
 
@@ -155,7 +155,7 @@ const rules = app.resolveAll<AmlRule>(AML_RULES);
 
 ## HTTP and RPC
 
-Use decorators from `@cryppex/imperium/decorators`:
+Use decorators from `@smounters/imperium/decorators`:
 
 - HTTP: `HttpController`, `Get`, `Post`, `Put`, `Patch`, `Delete`, `Body`, `Query`, `Param`, `Header`, `Req`, `Res`
 - RPC: `RpcService`, `RpcMethod`, `RpcData`, `RpcContext`, `RpcHeaders`, `RpcHeader`
@@ -164,15 +164,15 @@ Imperium auto-detects registered HTTP/RPC handlers and serves both protocols fro
 
 ## Services
 
-From `@cryppex/imperium/services`:
+From `@smounters/imperium/services`:
 
 - `ConfigService`
 - `LoggerService`
 
 ## Pipes and Validation
 
-- `ZodPipe` from `@cryppex/imperium/pipes`
-- validation helpers from `@cryppex/imperium/validation`
+- `ZodPipe` from `@smounters/imperium/pipes`
+- validation helpers from `@smounters/imperium/validation`
   - `booleanSchema`
   - `numberSchema`
   - `nativeEnumSchema`
@@ -181,7 +181,7 @@ From `@cryppex/imperium/services`:
 
 ## Error Classes
 
-From `@cryppex/imperium/core`:
+From `@smounters/imperium/core`:
 
 - `HttpException`
 - `BadRequestException`

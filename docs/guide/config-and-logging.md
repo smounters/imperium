@@ -8,7 +8,7 @@
 - With schema: `configureConfig(schema, source)` validates and stores typed config.
 
 ```ts
-import { ConfigService } from "@cryppex/imperium/services";
+import { ConfigService } from "@smounters/imperium/services";
 import { z } from "zod";
 
 const appConfigSchema = z.object({
@@ -36,7 +36,7 @@ const port = cfg.get("APP_PORT");
 `LoggerService` is injectable and uses `tslog` under the hood.
 
 ```ts
-import { LoggerService } from "@cryppex/imperium/services";
+import { LoggerService } from "@smounters/imperium/services";
 
 @Injectable()
 class OrdersService {

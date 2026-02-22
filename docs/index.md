@@ -24,7 +24,7 @@ Imperium is a modular DI framework for TypeScript services that need:
 ## Installation
 
 ```bash
-pnpm add @cryppex/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod
+pnpm add @smounters/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod
 ```
 
 In your entrypoint:
@@ -37,8 +37,8 @@ import "reflect-metadata";
 
 Root import is intentionally disabled. Use subpaths:
 
-- `@cryppex/imperium/core`
-- `@cryppex/imperium/decorators`
-- `@cryppex/imperium/services`
-- `@cryppex/imperium/pipes`
-- `@cryppex/imperium/validation`
+- `@smounters/imperium/core`
+- `@smounters/imperium/decorators`
+- `@smounters/imperium/services`
+- `@smounters/imperium/pipes`
+- `@smounters/imperium/validation`

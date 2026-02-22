@@ -1,8 +1,8 @@
 # API Surface
 
-Imperium exports only subpaths. Root import (`@cryppex/imperium`) is intentionally disabled.
+Imperium exports only subpaths. Root import (`@smounters/imperium`) is intentionally disabled.
 
-## `@cryppex/imperium/core`
+## `@smounters/imperium/core`
 
 Runtime exports:
 
@@ -26,7 +26,7 @@ Type exports (selected):
 - lifecycle hooks: `OnModuleInit`, `OnApplicationBootstrap`, `OnModuleDestroy`, `BeforeApplicationShutdown`, `OnApplicationShutdown`
 - `ServerOptions`, `CorsOptions`, `HealthOptions`, `LoggerOptions`
 
-## `@cryppex/imperium/decorators`
+## `@smounters/imperium/decorators`
 
 - DI: `Module`, `Injectable`, `Inject`, `InjectAll`, `Optional`, `Scope`
 - HTTP: `HttpController`, `Get`, `Post`, `Put`, `Patch`, `Delete`, `Body`, `Query`, `Param`, `Header`, `Req`, `Res`
@@ -34,16 +34,16 @@ Type exports (selected):
 - Enhancers: `UseGuards`, `UsePipes`, `UseInterceptors`, `UseFilters`, `Catch`
 - Metadata: `SetMetadata`
 
-## `@cryppex/imperium/services`
+## `@smounters/imperium/services`
 
 - `ConfigService`
 - `LoggerService`
 
-## `@cryppex/imperium/pipes`
+## `@smounters/imperium/pipes`
 
 - `ZodPipe`
 
-## `@cryppex/imperium/validation`
+## `@smounters/imperium/validation`
 
 - `booleanSchema`
 - `numberSchema`

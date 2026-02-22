@@ -34,7 +34,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Resolve release version from tag
         id: release
@@ -84,7 +84,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build docs
         run: pnpm run docs:build
@@ -97,9 +97,7 @@ jobs:
   deploy_docs:
     needs: build_docs
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    environment: github-pages
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

@@ -3,8 +3,8 @@
 ## Service Decorators
 
 ```ts
-import { Injectable, RpcMethod, RpcService } from "@cryppex/imperium/decorators";
-import { AuthRPC } from "@cryppex/proto/public/auth_pb";
+import { Injectable, RpcMethod, RpcService } from "@smounters/imperium/decorators";
+import { AuthRPC } from "@smounters/proto/public/auth_pb";
 
 @Injectable()
 @RpcService(AuthRPC)

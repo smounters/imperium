@@ -48,13 +48,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smounters/cryppex-main.git",
-    "directory": "packages/imperium"
+    "url": "git+https://github.com/smounters/imperium.git"
   },
   "bugs": {
-    "url": "https://github.com/smounters/cryppex-main/issues"
+    "url": "https://github.com/smounters/imperium/issues"
   },
-  "homepage": "https://github.com/smounters/cryppex-main/tree/main/packages/imperium",
+  "homepage": "https://github.com/smounters/imperium",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -79,6 +78,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
     "@connectrpc/connect": "^2.1.1",
     "@connectrpc/connect-fastify": "^2.1.1",
     "@fastify/cors": "^11.2.0",

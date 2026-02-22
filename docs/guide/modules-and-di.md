@@ -3,7 +3,7 @@
 ## Module Shape
 
 ```ts
-import { Module } from "@cryppex/imperium/decorators";
+import { Module } from "@smounters/imperium/decorators";
 
 @Module({
   imports: [],
@@ -45,7 +45,7 @@ class UsersModule {}
 ## Injection Decorators
 
 ```ts
-import { Inject, InjectAll, Injectable, Optional } from "@cryppex/imperium/decorators";
+import { Inject, InjectAll, Injectable, Optional } from "@smounters/imperium/decorators";
 
 @Injectable()
 class BillingService {
@@ -87,7 +87,7 @@ const rules = app.resolveAll<AmlRule>(AML_RULES);
 
 ## Global Enhancers
 
-Use app-level enhancer tokens from `@cryppex/imperium/core`:
+Use app-level enhancer tokens from `@smounters/imperium/core`:
 
 - `APP_GUARD`
 - `APP_PIPE`
@@ -95,7 +95,7 @@ Use app-level enhancer tokens from `@cryppex/imperium/core`:
 - `APP_FILTER`
 
 ```ts
-import { APP_FILTER } from "@cryppex/imperium/core";
+import { APP_FILTER } from "@smounters/imperium/core";
 
 @Module({
   providers: [

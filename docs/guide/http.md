@@ -3,7 +3,7 @@
 ## Controller and Routes
 
 ```ts
-import { Body, Get, HttpController, Param, Post, Query } from "@cryppex/imperium/decorators";
+import { Body, Get, HttpController, Param, Post, Query } from "@smounters/imperium/decorators";
 
 @HttpController("/users")
 class UsersHttpController {

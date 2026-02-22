@@ -1,6 +1,6 @@
 # Application Bootstrap
 
-`Application` is the public bootstrap API from `@cryppex/imperium/core`.
+`Application` is the public bootstrap API from `@smounters/imperium/core`.
 
 ## Why It Exists
 
@@ -16,8 +16,8 @@ It wraps internal container/server wiring and gives you a deterministic startup 
 ```ts
 import "reflect-metadata";
 
-import { Application } from "@cryppex/imperium/core";
-import { ConfigService, LoggerService } from "@cryppex/imperium/services";
+import { Application } from "@smounters/imperium/core";
+import { ConfigService, LoggerService } from "@smounters/imperium/services";
 import { z } from "zod";
 
 const appConfigSchema = z.object({

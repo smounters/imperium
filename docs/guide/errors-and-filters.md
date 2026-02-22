@@ -2,7 +2,7 @@
 
 ## Built-in HTTP Exceptions
 
-From `@cryppex/imperium/core`:
+From `@smounters/imperium/core`:
 
 - `HttpException`
 - `BadRequestException`
@@ -12,7 +12,7 @@ From `@cryppex/imperium/core`:
 - `InternalServerErrorException`
 
 ```ts
-import { BadRequestException } from "@cryppex/imperium/core";
+import { BadRequestException } from "@smounters/imperium/core";
 
 if (!payload.email) {
   throw new BadRequestException("email is required");
@@ -22,8 +22,8 @@ if (!payload.email) {
 ## Exception Filters
 
 ```ts
-import type { BaseContext, ExceptionFilter } from "@cryppex/imperium/core";
-import { Catch, Injectable } from "@cryppex/imperium/decorators";
+import type { BaseContext, ExceptionFilter } from "@smounters/imperium/core";
+import { Catch, Injectable } from "@smounters/imperium/decorators";
 
 @Catch(Error)
 @Injectable()
@@ -41,7 +41,7 @@ class GlobalExceptionFilter implements ExceptionFilter {
 Register globally with `APP_FILTER`:
 
 ```ts
-import { APP_FILTER } from "@cryppex/imperium/core";
+import { APP_FILTER } from "@smounters/imperium/core";
 
 @Module({
   providers: [
