@@ -14,50 +14,41 @@ From repo root:
 
 ```bash
 pnpm install
-pnpm --filter @cryppex/imperium run typecheck
-pnpm --filter @cryppex/imperium run build
-pnpm --filter @cryppex/imperium pack
+pnpm run typecheck
+pnpm run build
+pnpm pack
 ```
 
 ## Publish from Local Machine
 
 ```bash
-pnpm --filter @cryppex/imperium publish --access public --no-git-checks
+pnpm publish --access public --no-git-checks
 ```
 
-## GitHub Workflow: Package Publish
+## GitHub Workflow: Unified Publish
 
-`.github/workflows/imperium-publish.yml` supports:
+`.github/workflows/publish.yml` handles package publish and docs deploy.
 
-- Tag push: `imperium-v*`
-- Manual run (`workflow_dispatch`) with optional dry-run
+- Trigger: tag push `v*.*.*`
 
 It performs:
 
 1. `pnpm install`
 2. `typecheck`
 3. `build`
-4. `publish` (or `pack` in dry-run)
+4. `publish` to npm
+5. `build` + deploy docs to GitHub Pages
 
 Required secret:
 
 - `NPM_TOKEN`
 
-## GitHub Workflow: Docs Publish
-
-`.github/workflows/imperium-docs.yml` builds docs with VitePress and deploys to GitHub Pages.
-
-Trigger:
-
-- push to `main` for docs/package changes
-- manual run
-
 The workflow sets `DOCS_BASE=/<repo>/` automatically for project pages.
 
-## Versioning Recommendation
+## Versioning Model
 
-Before each publish:
+Package version is derived from the git tag during CI publish:
 
-1. bump `packages/imperium/package.json` version
-2. update `packages/imperium/CHANGELOG.md`
-3. create tag (`imperium-vX.Y.Z`)
+1. update `CHANGELOG.md`
+2. create and push tag (`vX.Y.Z`)
+3. workflow syncs `package.json` version to the tag and publishes

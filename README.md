@@ -194,29 +194,29 @@ From `@cryppex/imperium/core`:
 
 Full docs (VitePress) are located in:
 
-- `packages/imperium/docs`
+- `docs`
 
 Local docs commands:
 
 ```bash
-pnpm --filter @cryppex/imperium run docs:dev
-pnpm --filter @cryppex/imperium run docs:build
+pnpm run docs:dev
+pnpm run docs:build
 ```
 
-GitHub Pages deployment is configured via `.github/workflows/imperium-docs.yml`.
+GitHub Pages deployment is configured via `.github/workflows/publish.yml`.
 
 ## Publish to npm
 
 ```bash
 pnpm install
-pnpm --filter @cryppex/imperium run typecheck
-pnpm --filter @cryppex/imperium run build
-pnpm --filter @cryppex/imperium publish --access public --no-git-checks
+pnpm run typecheck
+pnpm run build
+pnpm publish --access public --no-git-checks
 ```
 
 Automated npm publishing workflow:
 
-- `.github/workflows/imperium-publish.yml`
+- `.github/workflows/publish.yml`
 
 Required secret:
 
