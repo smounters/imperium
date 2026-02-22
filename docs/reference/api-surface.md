@@ -45,6 +45,8 @@ Type exports (selected):
 
 ## `@smounters/imperium/validation`
 
+- `appConfigSchema`
+- `AppConfig`
 - `booleanSchema`
 - `numberSchema`
 - `nativeEnumSchema`

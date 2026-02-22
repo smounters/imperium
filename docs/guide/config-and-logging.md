@@ -24,6 +24,28 @@ const cfg = app.resolve(ConfigService<AppConfig>);
 const port = cfg.get("APP_PORT");
 ```
 
+### Built-in App Schema
+
+Imperium exports a ready-to-use base schema from `@smounters/imperium/validation`:
+
+```ts
+import { appConfigSchema, type AppConfig } from "@smounters/imperium/validation";
+
+app.configureConfig(appConfigSchema, process.env);
+const config = app.resolve(ConfigService<AppConfig>).getAll();
+```
+
+You can extend it in your app:
+
+```ts
+import { appConfigSchema } from "@smounters/imperium/validation";
+import { z } from "zod";
+
+const projectConfigSchema = appConfigSchema.extend({
+  REDIS_URL: z.url(),
+});
+```
+
 `ConfigService` methods:
 
 - `getAll()`

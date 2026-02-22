@@ -173,6 +173,8 @@ From `@smounters/imperium/services`:
 
 - `ZodPipe` from `@smounters/imperium/pipes`
 - validation helpers from `@smounters/imperium/validation`
+  - `appConfigSchema`
+  - `AppConfig`
   - `booleanSchema`
   - `numberSchema`
   - `nativeEnumSchema`
