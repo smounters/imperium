@@ -1,0 +1,94 @@
+{
+  "name": "@smounters/imperium",
+  "version": "0.1.0",
+  "description": "NestJS-like modular DI container with unified HTTP + Connect RPC server for TypeScript.",
+  "keywords": [
+    "nestjs",
+    "di",
+    "dependency-injection",
+    "fastify",
+    "connectrpc",
+    "typescript"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./decorators": {
+      "types": "./dist/decorators/index.d.ts",
+      "import": "./dist/decorators/index.js"
+    },
+    "./pipes": {
+      "types": "./dist/pipes/index.d.ts",
+      "import": "./dist/pipes/index.js"
+    },
+    "./services": {
+      "types": "./dist/services/index.d.ts",
+      "import": "./dist/services/index.js"
+    },
+    "./validation": {
+      "types": "./dist/validation/index.d.ts",
+      "import": "./dist/validation/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smounters/cryppex-main.git",
+    "directory": "packages/imperium"
+  },
+  "bugs": {
+    "url": "https://github.com/smounters/cryppex-main/issues"
+  },
+  "homepage": "https://github.com/smounters/cryppex-main/tree/main/packages/imperium",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "pnpm exec tsc -p tsconfig.json",
+    "typecheck": "pnpm exec tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist",
+    "docs:dev": "pnpm exec vitepress dev docs",
+    "docs:build": "pnpm exec vitepress build docs",
+    "docs:preview": "pnpm exec vitepress preview docs",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
+  },
+  "peerDependencies": {
+    "@connectrpc/connect": "^2.1.1",
+    "@connectrpc/connect-fastify": "^2.1.1",
+    "@fastify/cors": "^11.2.0",
+    "fastify": "^5.7.4",
+    "tsyringe": "^4.10.0",
+    "reflect-metadata": "^0.2.2",
+    "tslog": "^4.10.2",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@connectrpc/connect": "^2.1.1",
+    "@connectrpc/connect-fastify": "^2.1.1",
+    "@fastify/cors": "^11.2.0",
+    "fastify": "^5.7.4",
+    "reflect-metadata": "^0.2.2",
+    "tslog": "^4.10.2",
+    "tsyringe": "^4.10.0",
+    "typescript": "^5.9.3",
+    "vitepress": "^1.6.4",
+    "zod": "^4.3.6"
+  },
+  "dependencies": {}
+}

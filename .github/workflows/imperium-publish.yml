@@ -1,0 +1,56 @@
+name: Publish Imperium
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and pack only, do not publish to npm"
+        required: false
+        type: boolean
+        default: false
+  push:
+    tags:
+      - "imperium-v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Typecheck package
+        run: pnpm --filter @cryppex/imperium run typecheck
+
+      - name: Build package
+        run: pnpm --filter @cryppex/imperium run build
+
+      - name: Pack (dry-run)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: pnpm --filter @cryppex/imperium pack
+
+      - name: Publish to npm
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        run: pnpm --filter @cryppex/imperium publish --access public --no-git-checks --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

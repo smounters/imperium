@@ -1,0 +1,44 @@
+# Imperium
+
+> Inspired by NestJS, built on top of `tsyringe`, `Fastify`, and `ConnectRPC`.
+
+Imperium is a modular DI framework for TypeScript services that need:
+
+- a single server for HTTP and RPC;
+- module boundaries with explicit exports/imports;
+- request-scoped handlers;
+- Nest-like decorators and lifecycle hooks;
+- structured logging and schema-validated runtime config.
+
+## Start Here
+
+- [Getting Started](/guide/getting-started)
+- [Application Bootstrap](/guide/application-bootstrap)
+- [Modules and DI](/guide/modules-and-di)
+- [HTTP](/guide/http)
+- [RPC](/guide/rpc)
+- [Config and Logging](/guide/config-and-logging)
+- [Errors and Filters](/guide/errors-and-filters)
+- [API Surface](/reference/api-surface)
+
+## Installation
+
+```bash
+pnpm add @cryppex/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod
+```
+
+In your entrypoint:
+
+```ts
+import "reflect-metadata";
+```
+
+## Public Import Paths
+
+Root import is intentionally disabled. Use subpaths:
+
+- `@cryppex/imperium/core`
+- `@cryppex/imperium/decorators`
+- `@cryppex/imperium/services`
+- `@cryppex/imperium/pipes`
+- `@cryppex/imperium/validation`

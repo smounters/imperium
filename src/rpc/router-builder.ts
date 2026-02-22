@@ -1,0 +1,51 @@
+import type { ConnectRouter } from "@connectrpc/connect";
+import "reflect-metadata";
+
+import type { AppContainer } from "../core/container";
+import type { RpcMethodMeta } from "../core/types";
+import type { Constructor } from "../types";
+
+import { RPC_METHODS_KEY, RPC_SERVICE_KEY } from "../decorators/rpc.decorators";
+import { createRpcHandler } from "./adapter";
+
+type RpcControllerShape = Record<string, unknown>;
+
+type RpcMethodImpl = Parameters<ConnectRouter["rpc"]>[1];
+
+function assertUnaryRpcMethod(
+  controller: Constructor<RpcControllerShape>,
+  handlerName: string,
+  method: RpcMethodMeta["method"],
+): void {
+  if (method.methodKind === "unary") {
+    return;
+  }
+
+  const serviceName = method.parent.name;
+  const rpcName = method.name;
+
+  throw new Error(
+    `Streaming RPC methods are not supported: ${serviceName}.${rpcName} (${method.methodKind}) ` +
+      `at ${controller.name}.${handlerName}. Only unary methods are supported.`,
+  );
+}
+
+export function buildConnectRoutes(di: AppContainer) {
+  return (router: ConnectRouter): void => {
+    for (const ctrl of di.getControllers()) {
+      const controller = ctrl as Constructor<RpcControllerShape>;
+      const service = Reflect.getMetadata(RPC_SERVICE_KEY, controller);
+
+      if (!service) {
+        continue;
+      }
+
+      const methods = (Reflect.getMetadata(RPC_METHODS_KEY, controller) as RpcMethodMeta[] | undefined) ?? [];
+
+      for (const { method, handlerName } of methods) {
+        assertUnaryRpcMethod(controller, handlerName, method);
+        router.rpc(method, createRpcHandler(di, controller, handlerName) as RpcMethodImpl);
+      }
+    }
+  };
+}

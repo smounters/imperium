@@ -1,0 +1,227 @@
+# @cryppex/imperium
+
+`@cryppex/imperium` is **inspired by NestJS** and provides a modular DI-first runtime for TypeScript services using Fastify + ConnectRPC.
+
+It is designed for teams that want Nest-like architecture but with explicit control over runtime wiring and exported API surface.
+
+## Key Features
+
+- Nest-like modules and decorators (`@Module`, `@Injectable`, guards/pipes/interceptors/filters).
+- Unified HTTP + RPC server on one Fastify instance.
+- Request-scoped handler execution.
+- Typed runtime config via `zod` + `ConfigService`.
+- Built-in `LoggerService` (tslog-based).
+- Global enhancer tokens (`APP_GUARD`, `APP_PIPE`, `APP_INTERCEPTOR`, `APP_FILTER`).
+- Multi-provider array injection (`InjectAll`) and manual array resolution (`resolveAll`).
+
+## Public Imports
+
+Root import is intentionally disabled.
+
+Use subpaths only:
+
+- `@cryppex/imperium/core`
+- `@cryppex/imperium/decorators`
+- `@cryppex/imperium/services`
+- `@cryppex/imperium/pipes`
+- `@cryppex/imperium/validation`
+
+## Installation
+
+```bash
+pnpm add @cryppex/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod
+```
+
+TypeScript requirements:
+
+```json
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
+```
+
+Entry point must import metadata:
+
+```ts
+import "reflect-metadata";
+```
+
+## Quick Start
+
+```ts
+import "reflect-metadata";
+
+import { Application } from "@cryppex/imperium/core";
+import { Body, HttpController, Injectable, Module, Post } from "@cryppex/imperium/decorators";
+
+@Injectable()
+class AuthService {
+  signIn(email: string) {
+    return { ok: true, email };
+  }
+}
+
+@HttpController("/auth")
+class AuthHttpController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post("/sign-in")
+  signIn(@Body("email") email: string) {
+    return this.authService.signIn(email);
+  }
+}
+
+@Module({
+  providers: [AuthService],
+  httpControllers: [AuthHttpController],
+})
+class AppModule {}
+
+const app = new Application(AppModule, {
+  host: "0.0.0.0",
+  accessLogs: true,
+});
+
+await app.start({ port: 3000 });
+```
+
+## Recommended Bootstrap Flow
+
+```ts
+import { Application } from "@cryppex/imperium/core";
+import { ConfigService, LoggerService } from "@cryppex/imperium/services";
+import { z } from "zod";
+
+const appConfigSchema = z.object({
+  APP_PORT: z.coerce.number().default(8000),
+  APP_GLOBAL_PREFIX: z.string().default(""),
+});
+
+type AppConfig = z.infer<typeof appConfigSchema>;
+
+const app = new Application(AppModule, {
+  host: "0.0.0.0",
+  accessLogs: true,
+});
+
+app.configureConfig(appConfigSchema, process.env);
+
+const config = app.resolve(ConfigService<AppConfig>).getAll();
+
+app.configureLogger({
+  name: "backend",
+  minLevel: 3,
+});
+
+await app.start({
+  port: config.APP_PORT,
+  prefix: config.APP_GLOBAL_PREFIX,
+});
+
+app.resolve(LoggerService).info({ event: "app.started", port: config.APP_PORT });
+```
+
+## Multi Providers
+
+```ts
+import { InjectAll, Injectable, Module } from "@cryppex/imperium/decorators";
+
+const AML_RULES = Symbol("AML_RULES");
+
+@Module({
+  providers: [
+    { provide: AML_RULES, multi: true, useClass: SanctionsRule },
+    { provide: AML_RULES, multi: true, useClass: MixerRule },
+    { provide: AML_RULES, multi: true, useClass: FreshAddressRule },
+  ],
+  exports: [AML_RULES],
+})
+class AmlModule {}
+
+@Injectable()
+class AmlEngine {
+  constructor(@InjectAll(AML_RULES) private readonly rules: AmlRule[]) {}
+}
+```
+
+Manual resolution is also available:
+
+```ts
+const rules = app.resolveAll<AmlRule>(AML_RULES);
+```
+
+## HTTP and RPC
+
+Use decorators from `@cryppex/imperium/decorators`:
+
+- HTTP: `HttpController`, `Get`, `Post`, `Put`, `Patch`, `Delete`, `Body`, `Query`, `Param`, `Header`, `Req`, `Res`
+- RPC: `RpcService`, `RpcMethod`, `RpcData`, `RpcContext`, `RpcHeaders`, `RpcHeader`
+
+Imperium auto-detects registered HTTP/RPC handlers and serves both protocols from one server.
+
+## Services
+
+From `@cryppex/imperium/services`:
+
+- `ConfigService`
+- `LoggerService`
+
+## Pipes and Validation
+
+- `ZodPipe` from `@cryppex/imperium/pipes`
+- validation helpers from `@cryppex/imperium/validation`
+  - `booleanSchema`
+  - `numberSchema`
+  - `nativeEnumSchema`
+  - `stringArraySchema`
+  - `enumArraySchema`
+
+## Error Classes
+
+From `@cryppex/imperium/core`:
+
+- `HttpException`
+- `BadRequestException`
+- `UnauthorizedException`
+- `ForbiddenException`
+- `NotFoundException`
+- `InternalServerErrorException`
+
+## Documentation
+
+Full docs (VitePress) are located in:
+
+- `packages/imperium/docs`
+
+Local docs commands:
+
+```bash
+pnpm --filter @cryppex/imperium run docs:dev
+pnpm --filter @cryppex/imperium run docs:build
+```
+
+GitHub Pages deployment is configured via `.github/workflows/imperium-docs.yml`.
+
+## Publish to npm
+
+```bash
+pnpm install
+pnpm --filter @cryppex/imperium run typecheck
+pnpm --filter @cryppex/imperium run build
+pnpm --filter @cryppex/imperium publish --access public --no-git-checks
+```
+
+Automated npm publishing workflow:
+
+- `.github/workflows/imperium-publish.yml`
+
+Required secret:
+
+- `NPM_TOKEN`
+
+## License
+
+MIT
