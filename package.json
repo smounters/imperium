@@ -49,7 +49,7 @@
   "bugs": {
     "url": "https://github.com/smounters/imperium/issues"
   },
-  "homepage": "https://github.com/smounters/imperium",
+  "homepage": "https://smounters.github.io/imperium/",
   "engines": {
     "node": ">=20.0.0"
   },
