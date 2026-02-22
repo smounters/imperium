@@ -41,9 +41,7 @@ export default defineConfig({
         },
       ],
     },
-    socialLinks: [
-      { icon: "github", link: "https://github.com/smounters/cryppex-main" },
-    ],
+    socialLinks: [{ icon: "github", link: "https://github.com/smounters/cryppex-main" }],
     footer: {
       message: "Inspired by NestJS. Built for internal and public TypeScript backends.",
       copyright: "MIT License",

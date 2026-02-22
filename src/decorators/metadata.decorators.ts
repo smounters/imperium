@@ -15,10 +15,7 @@ function getMetaTarget(target: object, propertyKey?: string | symbol): object {
   return value as object;
 }
 
-export function SetMetadata<T = unknown>(
-  metadataKey: MetadataKey,
-  metadataValue: T,
-): ClassDecorator & MethodDecorator {
+export function SetMetadata<T = unknown>(metadataKey: MetadataKey, metadataValue: T): ClassDecorator & MethodDecorator {
   return (target: object, propertyKey?: string | symbol) => {
     const metaTarget = getMetaTarget(target, propertyKey);
     Reflect.defineMetadata(metadataKey, metadataValue, metaTarget);

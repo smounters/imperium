@@ -32,10 +32,8 @@ export const numberSchema = () =>
     return v;
   }, z.number());
 
-export const nativeEnumSchema = <T extends NativeEnumLike>(
-  enumType: T,
-  normalize?: (value: string) => string,
-) => z.preprocess((v) => (typeof v === "string" ? (normalize ? normalize(v) : v) : v), z.nativeEnum(enumType));
+export const nativeEnumSchema = <T extends NativeEnumLike>(enumType: T, normalize?: (value: string) => string) =>
+  z.preprocess((v) => (typeof v === "string" ? (normalize ? normalize(v) : v) : v), z.nativeEnum(enumType));
 
 export const stringArraySchema = <T extends z.ZodType>(itemSchema: T) =>
   z.preprocess((v) => {

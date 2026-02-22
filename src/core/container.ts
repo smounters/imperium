@@ -451,9 +451,8 @@ export class AppContainer {
   }
 
   private registerGlobalExports(moduleRef: ModuleRef): void {
-    const moduleOwner = typeof moduleRef.key === "string"
-      ? moduleRef.key
-      : moduleRef.moduleClass.name || "<anonymous module>";
+    const moduleOwner =
+      typeof moduleRef.key === "string" ? moduleRef.key : moduleRef.moduleClass.name || "<anonymous module>";
 
     for (const token of moduleRef.exportedTokens) {
       if (isAppEnhancerToken(token)) {
@@ -498,10 +497,7 @@ export class AppContainer {
     return created;
   }
 
-  private getModuleScopeForRequest(
-    context: RequestResolutionContext,
-    moduleRef: ModuleRef,
-  ): DependencyContainer {
+  private getModuleScopeForRequest(context: RequestResolutionContext, moduleRef: ModuleRef): DependencyContainer {
     const existing = context.scopesByModule.get(moduleRef);
     if (existing) {
       return existing;
@@ -838,10 +834,7 @@ export class AppContainer {
     }
   }
 
-  async runInRequestScope<T>(
-    scope: DependencyContainer,
-    execute: () => Promise<T> | T,
-  ): Promise<T> {
+  async runInRequestScope<T>(scope: DependencyContainer, execute: () => Promise<T> | T): Promise<T> {
     const originModuleRef = this.requestScopeOwners.get(scope);
     const context: RequestResolutionContext = {
       originScope: scope,

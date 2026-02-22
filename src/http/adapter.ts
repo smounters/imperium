@@ -7,12 +7,7 @@ import { LoggerService } from "../services";
 import { ForbiddenException, toHttpError } from "../core/errors";
 import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators";
 import { PARAMS_KEY } from "../decorators/http.decorators";
-import {
-  collectFiltersForHttp,
-  collectGuardsForHttp,
-  collectInterceptorsForHttp,
-  collectPipesForHttp,
-} from "./utils";
+import { collectFiltersForHttp, collectGuardsForHttp, collectInterceptorsForHttp, collectPipesForHttp } from "./utils";
 
 type RequestScope = ReturnType<AppContainer["createRequestScope"]>;
 type RequestWithScope = FastifyRequest & { diScope?: RequestScope };
@@ -22,12 +17,7 @@ interface HttpArgsBuildResult {
   metasByIndex: Map<number, HttpParamMeta>;
 }
 
-function logHttpError(
-  app: AppContainer,
-  scope: RequestScope,
-  details: Record<string, unknown>,
-  error: unknown,
-): void {
+function logHttpError(app: AppContainer, scope: RequestScope, details: Record<string, unknown>, error: unknown): void {
   try {
     scope.resolve(LoggerService).error(details, error);
     return;

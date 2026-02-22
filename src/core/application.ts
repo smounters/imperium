@@ -188,9 +188,10 @@ export class Application {
     }
 
     const options: GracefulShutdownOptions = raw;
-    const timeoutMs = typeof options.timeoutMs === "number" && Number.isFinite(options.timeoutMs) && options.timeoutMs > 0
-      ? options.timeoutMs
-      : Application.DEFAULT_SHUTDOWN_TIMEOUT_MS;
+    const timeoutMs =
+      typeof options.timeoutMs === "number" && Number.isFinite(options.timeoutMs) && options.timeoutMs > 0
+        ? options.timeoutMs
+        : Application.DEFAULT_SHUTDOWN_TIMEOUT_MS;
 
     return {
       enabled: options.enabled ?? true,

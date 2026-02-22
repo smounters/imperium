@@ -9,12 +9,7 @@ import { RPC_PARAMS_KEY } from "../decorators/rpc.decorators";
 import type { BaseContext, Constructor, ExceptionFilter, Guard, Interceptor, PipeTransform } from "../types";
 import { LoggerService } from "../services";
 
-import {
-  collectFiltersForRpc,
-  collectGuardsForRpc,
-  collectInterceptorsForRpc,
-  collectPipesForRpc,
-} from "./utils";
+import { collectFiltersForRpc, collectGuardsForRpc, collectInterceptorsForRpc, collectPipesForRpc } from "./utils";
 
 type RpcResponse = Record<string, unknown>;
 type RpcRequestScope = ReturnType<AppContainer["createRequestScope"]>;

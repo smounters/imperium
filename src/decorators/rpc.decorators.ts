@@ -1,5 +1,11 @@
 import "reflect-metadata";
-import type { RpcMethodDescriptor, RpcMethodMeta, RpcParamMeta, RpcParamSource, RpcServiceDescriptor } from "../core/types";
+import type {
+  RpcMethodDescriptor,
+  RpcMethodMeta,
+  RpcParamMeta,
+  RpcParamSource,
+  RpcServiceDescriptor,
+} from "../core/types";
 import { Injectable } from "./di.decorators";
 
 export const RPC_SERVICE_KEY = Symbol("rpc:service");
