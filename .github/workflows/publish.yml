@@ -97,7 +97,8 @@ jobs:
   deploy_docs:
     needs: build_docs
     runs-on: ubuntu-latest
-    environment: github-pages
+    environment:
+      name: "github-pages"
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
