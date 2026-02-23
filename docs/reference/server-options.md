@@ -72,7 +72,7 @@ Defaults:
 For full control, prefer pre-start methods on `Application`:
 
 ```ts
-app.configureConfig(schema, process.env);
+app.configureConfig(appConfigSchema, process.env);
 app.configureLogger(loggerOptions);
 await app.start({ port: 8000 });
 ```

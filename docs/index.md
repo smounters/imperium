@@ -42,3 +42,8 @@ Root import is intentionally disabled. Use subpaths:
 - `@smounters/imperium/services`
 - `@smounters/imperium/pipes`
 - `@smounters/imperium/validation`
+
+Validation subpath also exports the built-in app config schema:
+
+- `appConfigSchema`
+- `AppConfig`

@@ -9,14 +9,7 @@
 
 ```ts
 import { ConfigService } from "@smounters/imperium/services";
-import { z } from "zod";
-
-const appConfigSchema = z.object({
-  APP_PORT: z.coerce.number().default(8000),
-  LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
-});
-
-type AppConfig = z.infer<typeof appConfigSchema>;
+import { appConfigSchema, type AppConfig } from "@smounters/imperium/validation";
 
 app.configureConfig(appConfigSchema, process.env);
 
@@ -24,18 +17,9 @@ const cfg = app.resolve(ConfigService<AppConfig>);
 const port = cfg.get("APP_PORT");
 ```
 
-### Built-in App Schema
+### Extending the base schema
 
-Imperium exports a ready-to-use base schema from `@smounters/imperium/validation`:
-
-```ts
-import { appConfigSchema, type AppConfig } from "@smounters/imperium/validation";
-
-app.configureConfig(appConfigSchema, process.env);
-const config = app.resolve(ConfigService<AppConfig>).getAll();
-```
-
-You can extend it in your app:
+You can extend the exported base schema in your app:
 
 ```ts
 import { appConfigSchema } from "@smounters/imperium/validation";

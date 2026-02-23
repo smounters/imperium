@@ -18,14 +18,7 @@ import "reflect-metadata";
 
 import { Application } from "@smounters/imperium/core";
 import { ConfigService, LoggerService } from "@smounters/imperium/services";
-import { z } from "zod";
-
-const appConfigSchema = z.object({
-  APP_PORT: z.coerce.number().default(8000),
-  APP_GLOBAL_PREFIX: z.string().default(""),
-});
-
-type AppConfig = z.infer<typeof appConfigSchema>;
+import { appConfigSchema, type AppConfig } from "@smounters/imperium/validation";
 
 const app = new Application(AppModule, {
   host: "0.0.0.0",

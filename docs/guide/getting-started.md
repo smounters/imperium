@@ -60,17 +60,13 @@ await app.start();
 ## 4. Add Config Validation (Optional)
 
 ```ts
-import { z } from "zod";
 import { ConfigService } from "@smounters/imperium/services";
-
-const appConfigSchema = z.object({
-  APP_PORT: z.coerce.number().default(3000),
-});
+import { appConfigSchema, type AppConfig } from "@smounters/imperium/validation";
 
 const app = new Application(AppModule, { host: "0.0.0.0" });
 
 app.configureConfig(appConfigSchema, process.env);
-const config = app.resolve(ConfigService<z.infer<typeof appConfigSchema>>).getAll();
+const config = app.resolve(ConfigService<AppConfig>).getAll();
 
 await app.start({ port: config.APP_PORT });
 ```
