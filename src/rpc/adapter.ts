@@ -199,7 +199,7 @@ export function createRpcHandler<TController extends Record<string, unknown>>(
         );
 
         const args = buildRpcArgs(payload, context, handler);
-        const controllerHandler = instance[methodName] as (...args: unknown[]) => Promise<RpcResponse> | RpcResponse;
+        const controllerHandler = ((instance[methodName] as Function).bind(instance)) as (...args: unknown[]) => Promise<RpcResponse> | RpcResponse;
 
         let idx = -1;
 

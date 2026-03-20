@@ -225,7 +225,7 @@ export function createHttpHandler<TController extends Record<string, unknown>>(
           (interceptorLike) => resolveEnhancer<Interceptor>(requestScope, interceptorLike),
         );
 
-        const controllerHandler = instance[methodName] as (...args: unknown[]) => Promise<unknown> | unknown;
+        const controllerHandler = ((instance[methodName] as Function).bind(instance)) as (...args: unknown[]) => Promise<unknown> | unknown;
 
         let idx = -1;
 
