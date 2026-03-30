@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import type { WsGatewayMeta, WsHandlerMeta, WsParamMeta, WsParamSource } from "../ws/types";
-import { Injectable } from "./di.decorators";
+import type { WsGatewayMeta, WsHandlerMeta, WsParamMeta, WsParamSource } from "../ws/types.js";
+import { Injectable } from "./di.decorators.js";
 
 export const WS_GATEWAY_KEY = Symbol("ws:gateway");
 export const WS_HANDLERS_KEY = Symbol("ws:handlers");

@@ -1,5 +1,5 @@
-import { LOGGER_TOKEN, type AppLogger } from "../core/logger";
-import { Inject, Injectable } from "../decorators";
+import { LOGGER_TOKEN, type AppLogger } from "../core/logger.js";
+import { Inject, Injectable } from "../decorators/index.js";
 
 @Injectable()
 export class LoggerService {

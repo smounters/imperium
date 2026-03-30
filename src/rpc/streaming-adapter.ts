@@ -1,15 +1,15 @@
 import type { HandlerContext } from "@connectrpc/connect";
 import "reflect-metadata";
 
-import type { AppContainer } from "../core/container";
-import type { RpcParamMeta } from "../core/types";
-import { ForbiddenException, toConnectError } from "../core/errors";
-import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators";
-import { RPC_PARAMS_KEY } from "../decorators/rpc.decorators";
-import type { BaseContext, Constructor, ExceptionFilter, Guard, PipeTransform } from "../types";
-import { LoggerService } from "../services";
+import type { AppContainer } from "../core/container.js";
+import type { RpcParamMeta } from "../core/types.js";
+import { ForbiddenException, toConnectError } from "../core/errors.js";
+import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators.js";
+import { RPC_PARAMS_KEY } from "../decorators/rpc.decorators.js";
+import type { BaseContext, Constructor, ExceptionFilter, Guard, PipeTransform } from "../types.js";
+import { LoggerService } from "../services/index.js";
 
-import { collectFiltersForRpc, collectGuardsForRpc, collectPipesForRpc } from "./utils";
+import { collectFiltersForRpc, collectGuardsForRpc, collectPipesForRpc } from "./utils.js";
 
 type RpcRequestScope = ReturnType<AppContainer["createRequestScope"]>;
 

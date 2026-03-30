@@ -2,8 +2,8 @@ import "reflect-metadata";
 import { container, Lifecycle, type DependencyContainer } from "tsyringe";
 import { AsyncLocalStorage } from "node:async_hooks";
 
-import { MODULE_KEY } from "../decorators/di.decorators";
-import { WS_GATEWAY_KEY } from "../decorators/ws.decorators";
+import { MODULE_KEY } from "../decorators/di.decorators.js";
+import { WS_GATEWAY_KEY } from "../decorators/ws.decorators.js";
 import type {
   BeforeApplicationShutdown,
   Constructor,
@@ -21,14 +21,14 @@ import type {
   OnModuleInit,
   PipeLike,
   Provider,
-} from "../types";
+} from "../types.js";
 
 import type { ZodType, output } from "zod";
-import { ConfigService, LoggerService } from "../services";
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "./app-tokens";
-import { CONFIG_TOKEN } from "./config";
-import { createLogger, LOGGER_TOKEN, type AppLogger } from "./logger";
-import { Reflector } from "./reflector";
+import { ConfigService, LoggerService } from "../services/index.js";
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "./app-tokens.js";
+import { CONFIG_TOKEN } from "./config.js";
+import { createLogger, LOGGER_TOKEN, type AppLogger } from "./logger.js";
+import { Reflector } from "./reflector.js";
 
 type ModuleLoadKey = Constructor | string;
 

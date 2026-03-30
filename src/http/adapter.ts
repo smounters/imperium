@@ -1,13 +1,13 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { AppContainer } from "../core/container";
-import type { HttpParamMeta } from "../core/types";
-import { LoggerService } from "../services";
-import type { BaseContext, Constructor, ExceptionFilter, Guard, Interceptor, PipeTransform } from "../types";
+import type { AppContainer } from "../core/container.js";
+import type { HttpParamMeta } from "../core/types.js";
+import { LoggerService } from "../services/index.js";
+import type { BaseContext, Constructor, ExceptionFilter, Guard, Interceptor, PipeTransform } from "../types.js";
 
-import { ForbiddenException, toHttpError } from "../core/errors";
-import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators";
-import { PARAMS_KEY } from "../decorators/http.decorators";
-import { collectFiltersForHttp, collectGuardsForHttp, collectInterceptorsForHttp, collectPipesForHttp } from "./utils";
+import { ForbiddenException, toHttpError } from "../core/errors.js";
+import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators.js";
+import { PARAMS_KEY } from "../decorators/http.decorators.js";
+import { collectFiltersForHttp, collectGuardsForHttp, collectInterceptorsForHttp, collectPipesForHttp } from "./utils.js";
 
 type RequestScope = ReturnType<AppContainer["createRequestScope"]>;
 type RequestWithScope = FastifyRequest & { diScope?: RequestScope };

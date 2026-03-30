@@ -1,13 +1,13 @@
 import type { ConnectRouter } from "@connectrpc/connect";
 import "reflect-metadata";
 
-import type { AppContainer } from "../core/container";
-import type { RpcMethodMeta } from "../core/types";
-import type { Constructor } from "../types";
+import type { AppContainer } from "../core/container.js";
+import type { RpcMethodMeta } from "../core/types.js";
+import type { Constructor } from "../types.js";
 
-import { RPC_METHODS_KEY, RPC_SERVICE_KEY } from "../decorators/rpc.decorators";
-import { createRpcHandler } from "./adapter";
-import { createStreamingRpcHandler } from "./streaming-adapter";
+import { RPC_METHODS_KEY, RPC_SERVICE_KEY } from "../decorators/rpc.decorators.js";
+import { createRpcHandler } from "./adapter.js";
+import { createStreamingRpcHandler } from "./streaming-adapter.js";
 
 type RpcControllerShape = Record<string, unknown>;
 

@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import type { InterceptorLike } from "../types";
-import { appendArrayMetadata } from "./metadata.decorators";
+import type { InterceptorLike } from "../types.js";
+import { appendArrayMetadata } from "./metadata.decorators.js";
 
 export const INTERCEPTORS_KEY = Symbol("interceptors");
 

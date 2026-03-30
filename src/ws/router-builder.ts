@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify";
 import "reflect-metadata";
 
-import type { AppContainer } from "../core/container";
-import { WS_GATEWAY_KEY } from "../decorators/ws.decorators";
-import type { WsGatewayMeta } from "./types";
-import { handleWsConnection } from "./adapter";
+import type { AppContainer } from "../core/container.js";
+import { WS_GATEWAY_KEY } from "../decorators/ws.decorators.js";
+import type { WsGatewayMeta } from "./types.js";
+import { handleWsConnection } from "./adapter.js";
 
 export async function registerWsGateways(server: FastifyInstance, app: AppContainer): Promise<void> {
   const gateways = app.getWsGateways();

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { booleanSchema, numberSchema, stringArraySchema } from "./common";
+import { booleanSchema, numberSchema, stringArraySchema } from "./common.js";
 
 const LOG_LEVELS = ["silly", "trace", "debug", "info", "warn", "error", "fatal"] as const;
 const LOG_TYPES = ["pretty", "json"] as const;

@@ -1,11 +1,11 @@
 import "reflect-metadata";
-import { Reflector } from "../core/reflector";
-import { FILTERS_KEY } from "../decorators/filters.decorators";
-import { GUARDS_KEY } from "../decorators/guards.decorators";
-import { INTERCEPTORS_KEY } from "../decorators/interceptors.decorators";
-import { PIPES_KEY } from "../decorators/pipes.decorators";
+import { Reflector } from "../core/reflector.js";
+import { FILTERS_KEY } from "../decorators/filters.decorators.js";
+import { GUARDS_KEY } from "../decorators/guards.decorators.js";
+import { INTERCEPTORS_KEY } from "../decorators/interceptors.decorators.js";
+import { PIPES_KEY } from "../decorators/pipes.decorators.js";
 
-import type { Constructor, ExceptionFilterLike, GuardLike, InterceptorLike, PipeLike } from "../types";
+import type { Constructor, ExceptionFilterLike, GuardLike, InterceptorLike, PipeLike } from "../types.js";
 
 const reflector = new Reflector();
 

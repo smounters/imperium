@@ -1,4 +1,4 @@
-import type { ExceptionFilterLike, GuardLike, InjectionToken, InterceptorLike, PipeLike } from "../types";
+import type { ExceptionFilterLike, GuardLike, InjectionToken, InterceptorLike, PipeLike } from "../types.js";
 
 export const APP_GUARD: InjectionToken<GuardLike> = Symbol("app:guard");
 export const APP_INTERCEPTOR: InjectionToken<InterceptorLike> = Symbol("app:interceptor");

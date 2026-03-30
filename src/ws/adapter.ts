@@ -2,14 +2,14 @@ import type { FastifyRequest } from "fastify";
 import type { WebSocket } from "@fastify/websocket";
 import "reflect-metadata";
 
-import type { AppContainer } from "../core/container";
+import type { AppContainer } from "../core/container.js";
 
-import { GUARDS_KEY } from "../decorators/guards.decorators";
-import { WS_HANDLERS_KEY, WS_PARAMS_KEY } from "../decorators/ws.decorators";
-import { Reflector } from "../core/reflector";
-import { LoggerService } from "../services";
-import type { BaseContext, Constructor, Guard, GuardLike, WsArgumentsHost } from "../types";
-import type { WsGatewayLifecycle, WsHandlerMeta, WsParamMeta } from "./types";
+import { GUARDS_KEY } from "../decorators/guards.decorators.js";
+import { WS_HANDLERS_KEY, WS_PARAMS_KEY } from "../decorators/ws.decorators.js";
+import { Reflector } from "../core/reflector.js";
+import { LoggerService } from "../services/index.js";
+import type { BaseContext, Constructor, Guard, GuardLike, WsArgumentsHost } from "../types.js";
+import type { WsGatewayLifecycle, WsHandlerMeta, WsParamMeta } from "./types.js";
 
 type RequestScope = ReturnType<AppContainer["createRequestScope"]>;
 

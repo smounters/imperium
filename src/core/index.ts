@@ -1,5 +1,5 @@
-export { Application } from "./application";
-export { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "./app-tokens";
+export { Application } from "./application.js";
+export { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "./app-tokens.js";
 export {
   BadRequestException,
   ForbiddenException,
@@ -7,6 +7,6 @@ export {
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
-} from "./errors";
-export { Reflector } from "./reflector";
-export type * from "../types";
+} from "./errors.js";
+export { Reflector } from "./reflector.js";
+export type * from "../types.js";

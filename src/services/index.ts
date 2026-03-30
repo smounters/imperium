@@ -1,2 +1,2 @@
-export * from "./config.service";
-export * from "./logger.service";
+export * from "./config.service.js";
+export * from "./logger.service.js";

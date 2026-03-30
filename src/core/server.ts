@@ -4,13 +4,13 @@ import { fastifyConnectPlugin } from "@connectrpc/connect-fastify";
 import fastifyCors from "@fastify/cors";
 import Fastify, { type FastifyInstance, type FastifyRequest } from "fastify";
 
-import { HTTP_ROUTES_KEY } from "../decorators/http.decorators";
-import { RPC_METHODS_KEY, RPC_SERVICE_KEY } from "../decorators/rpc.decorators";
-import { registerHttpRoutes } from "../http";
-import { buildConnectRoutes } from "../rpc";
-import { registerWsGateways } from "../ws";
-import type { CorsOptions, HealthCheck, HealthCheckResult, ServerOptions } from "../types";
-import { AppContainer } from "./container";
+import { HTTP_ROUTES_KEY } from "../decorators/http.decorators.js";
+import { RPC_METHODS_KEY, RPC_SERVICE_KEY } from "../decorators/rpc.decorators.js";
+import { registerHttpRoutes } from "../http/index.js";
+import { buildConnectRoutes } from "../rpc/index.js";
+import { registerWsGateways } from "../ws/index.js";
+import type { CorsOptions, HealthCheck, HealthCheckResult, ServerOptions } from "../types.js";
+import { AppContainer } from "./container.js";
 
 type RequestScope = ReturnType<AppContainer["createRequestScope"]>;
 type RequestWithScope = FastifyRequest & { diScope?: RequestScope; requestStartAt?: number };

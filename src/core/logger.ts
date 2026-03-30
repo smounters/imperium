@@ -1,5 +1,5 @@
 import { Logger } from "tslog";
-import type { LoggerOptions } from "../types";
+import type { LoggerOptions } from "../types.js";
 
 type LoggerPayload = Record<string, unknown>;
 

@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import type { Constructor, ExceptionFilterLike } from "../types";
-import { Injectable } from "./di.decorators";
-import { appendArrayMetadata } from "./metadata.decorators";
+import type { Constructor, ExceptionFilterLike } from "../types.js";
+import { Injectable } from "./di.decorators.js";
+import { appendArrayMetadata } from "./metadata.decorators.js";
 
 export const FILTERS_KEY = Symbol("filters");
 export const CATCH_EXCEPTIONS_KEY = Symbol("filter:exceptions");

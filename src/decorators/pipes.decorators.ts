@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import type { PipeLike } from "../types";
-import { appendArrayMetadata } from "./metadata.decorators";
+import type { PipeLike } from "../types.js";
+import { appendArrayMetadata } from "./metadata.decorators.js";
 
 export const PIPES_KEY = Symbol("pipes");
 

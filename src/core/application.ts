@@ -6,10 +6,10 @@ import type {
   ModuleImport,
   ServerOptions,
   ShutdownSignal,
-} from "../types";
+} from "../types.js";
 import type { ZodType, output } from "zod";
-import { AppContainer } from "./container";
-import { startServer } from "./server";
+import { AppContainer } from "./container.js";
+import { startServer } from "./server.js";
 
 interface ResolvedGracefulShutdownOptions {
   enabled: boolean;

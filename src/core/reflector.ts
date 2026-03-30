@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { Injectable } from "../decorators/di.decorators";
-import type { MetadataKey } from "../types";
+import { Injectable } from "../decorators/di.decorators.js";
+import type { MetadataKey } from "../types.js";
 
 type MetadataTarget = object | Function | undefined;
 

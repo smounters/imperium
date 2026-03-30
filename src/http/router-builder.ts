@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify";
 import "reflect-metadata";
-import type { AppContainer } from "../core/container";
-import type { HttpRouteMeta } from "../core/types";
-import { HTTP_CONTROLLER_KEY, HTTP_ROUTES_KEY } from "../decorators/http.decorators";
-import type { Constructor } from "../types";
-import { createHttpHandler } from "./adapter";
+import type { AppContainer } from "../core/container.js";
+import type { HttpRouteMeta } from "../core/types.js";
+import { HTTP_CONTROLLER_KEY, HTTP_ROUTES_KEY } from "../decorators/http.decorators.js";
+import type { Constructor } from "../types.js";
+import { createHttpHandler } from "./adapter.js";
 
 type ControllerShape = Record<string, unknown>;
 

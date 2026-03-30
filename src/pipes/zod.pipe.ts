@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { PipeTransform } from "../types";
+import type { PipeTransform } from "../types.js";
 
 export class ZodPipe<TSchema extends z.ZodType> implements PipeTransform<unknown, z.infer<TSchema>> {
   constructor(private schema: TSchema) {}

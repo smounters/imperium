@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import type { GuardLike } from "../types";
-import { appendArrayMetadata } from "./metadata.decorators";
+import type { GuardLike } from "../types.js";
+import { appendArrayMetadata } from "./metadata.decorators.js";
 
 export const GUARDS_KEY = Symbol("guards");
 

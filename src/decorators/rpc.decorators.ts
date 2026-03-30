@@ -5,8 +5,8 @@ import type {
   RpcParamMeta,
   RpcParamSource,
   RpcServiceDescriptor,
-} from "../core/types";
-import { Injectable } from "./di.decorators";
+} from "../core/types.js";
+import { Injectable } from "./di.decorators.js";
 
 export const RPC_SERVICE_KEY = Symbol("rpc:service");
 export const RPC_METHODS_KEY = Symbol("rpc:methods");

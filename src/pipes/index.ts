@@ -1,1 +1,1 @@
-export * from "./zod.pipe";
+export * from "./zod.pipe.js";

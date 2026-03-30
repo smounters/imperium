@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import type { MetadataKey } from "../types";
+import type { MetadataKey } from "../types.js";
 
 function getMetaTarget(target: object, propertyKey?: string | symbol): object {
   if (propertyKey === undefined) {
