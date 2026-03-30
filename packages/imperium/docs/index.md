@@ -49,3 +49,12 @@ Validation subpath also exports the built-in app config schema:
 
 - `appConfigSchema`
 - `AppConfig`
+
+## Ecosystem
+
+| Package | Description |
+|---|---|
+| `@smounters/imperium` | Core framework (this package) |
+| [`@smounters/imperium-cron`](https://www.npmjs.com/package/@smounters/imperium-cron) | Cron scheduling with `@Cron()` decorator |
+
+All packages are in a single [monorepo](https://github.com/smounters/imperium).

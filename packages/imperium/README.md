@@ -2,6 +2,8 @@
 
 NestJS-inspired modular DI framework for TypeScript services. Unified HTTP + ConnectRPC + WebSocket server on a single Fastify instance.
 
+Part of the [Imperium monorepo](https://github.com/smounters/imperium). See also: [`@smounters/imperium-cron`](https://www.npmjs.com/package/@smounters/imperium-cron).
+
 ## Features
 
 - **Module system** with `@Module`, `@Injectable`, guards, pipes, interceptors, filters

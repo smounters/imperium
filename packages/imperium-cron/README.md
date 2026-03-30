@@ -1,6 +1,8 @@
 # @smounters/imperium-cron
 
-Cron scheduling for [@smounters/imperium](https://github.com/smounters/imperium). Decorate methods with `@Cron()` and they run on a schedule. Jobs auto-stop on application shutdown.
+Cron scheduling for [`@smounters/imperium`](https://www.npmjs.com/package/@smounters/imperium). Decorate methods with `@Cron()` and they run on a schedule. Jobs auto-stop on application shutdown.
+
+Part of the [Imperium monorepo](https://github.com/smounters/imperium).
 
 Built on [croner](https://github.com/Hexagon/croner) — lightweight, zero-dependency cron scheduler.
 

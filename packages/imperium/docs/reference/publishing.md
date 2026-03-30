@@ -1,54 +1,49 @@
 # Publishing
 
-Imperium is prepared for npm publication under the MIT license.
+All packages live in a single [monorepo](https://github.com/smounters/imperium) with pnpm workspaces.
 
 ## Prerequisites
 
 - Node.js 20+
 - pnpm 10+
-- npm token with publish permissions
+- `NPM_TOKEN` org-level secret in GitHub (smounters org)
 
-## Local Prepublish Checklist
+## Tag Convention
 
-From repo root:
+Each package has its own tag format:
+
+| Package | Tag format | Example |
+|---|---|---|
+| `@smounters/imperium` | `vX.Y.Z` | `v1.2.0` |
+| `@smounters/imperium-cron` | `imperium-cron/vX.Y.Z` | `imperium-cron/v0.2.0` |
+
+## Release Flow
+
+1. Update `CHANGELOG.md` in the package directory
+2. Create and push the tag:
 
 ```bash
-pnpm install
-pnpm run typecheck
-pnpm run build
-pnpm pack
+# Core
+git tag v1.2.0
+git push origin v1.2.0
+
+# Cron
+git tag imperium-cron/v0.2.0
+git push origin imperium-cron/v0.2.0
 ```
 
-## Publish from Local Machine
+3. CI automatically:
+   - Detects which package from the tag format
+   - Syncs `package.json` version
+   - Runs typecheck + tests
+   - Builds and publishes to npm
+   - Deploys docs to GitHub Pages (core only)
+   - Creates a GitHub Release
+
+## Local Verification
 
 ```bash
-pnpm publish --access public --no-git-checks
+pnpm run typecheck    # typecheck all packages
+pnpm run test         # run all tests
+pnpm run build        # build all packages
 ```
-
-## GitHub Workflow: Unified Publish
-
-`.github/workflows/publish.yml` handles package publish and docs deploy.
-
-- Trigger: tag push `v*.*.*`
-
-It performs:
-
-1. `pnpm install`
-2. `typecheck`
-3. `build`
-4. `publish` to npm
-5. `build` + deploy docs to GitHub Pages
-
-Required secret:
-
-- `NPM_TOKEN`
-
-The workflow sets `DOCS_BASE=/<repo>/` automatically for project pages.
-
-## Versioning Model
-
-Package version is derived from the git tag during CI publish:
-
-1. update `CHANGELOG.md`
-2. create and push tag (`vX.Y.Z`)
-3. workflow syncs `package.json` version to the tag and publishes
