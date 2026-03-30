@@ -8,6 +8,7 @@ NestJS-inspired modular DI framework for TypeScript services. Monorepo for all `
 |---|---|---|
 | [`@smounters/imperium`](packages/imperium/) | Core framework — HTTP + ConnectRPC + WebSocket on Fastify | [![npm](https://img.shields.io/npm/v/@smounters/imperium)](https://www.npmjs.com/package/@smounters/imperium) |
 | [`@smounters/imperium-cron`](packages/imperium-cron/) | Cron scheduling with `@Cron()` decorator | [![npm](https://img.shields.io/npm/v/@smounters/imperium-cron)](https://www.npmjs.com/package/@smounters/imperium-cron) |
+| [`@smounters/imperium-events`](packages/imperium-events/) | Typed event emitter with `@OnEvent()` and wildcards | [![npm](https://img.shields.io/npm/v/@smounters/imperium-events)](https://www.npmjs.com/package/@smounters/imperium-events) |
 
 ## Quick Start
 

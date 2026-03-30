@@ -39,8 +39,12 @@ jobs:
             echo "package=@smounters/imperium-cron" >> "$GITHUB_OUTPUT"
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
             echo "filter=@smounters/imperium-cron" >> "$GITHUB_OUTPUT"
+          elif [[ "$tag" =~ ^imperium-events/v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+            echo "package=@smounters/imperium-events" >> "$GITHUB_OUTPUT"
+            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "filter=@smounters/imperium-events" >> "$GITHUB_OUTPUT"
           else
-            echo "::error::Unknown tag format '${tag}'. Use vX.Y.Z or imperium-cron/vX.Y.Z"
+            echo "::error::Unknown tag format '${tag}'. Use vX.Y.Z, imperium-cron/vX.Y.Z, or imperium-events/vX.Y.Z"
             exit 1
           fi
 

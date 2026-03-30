@@ -121,6 +121,19 @@ importers:
         specifier: workspace:*
         version: link:../imperium
 
+  packages/imperium-events:
+    dependencies:
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      tsyringe:
+        specifier: ^4.10.0
+        version: 4.10.0
+    devDependencies:
+      '@smounters/imperium':
+        specifier: workspace:*
+        version: link:../imperium
+
 packages:
 
   '@algolia/abtesting@1.16.0':

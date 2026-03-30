@@ -7,7 +7,8 @@ pnpm workspaces monorepo for `@smounters/imperium` ecosystem.
 ```
 packages/
 ├── imperium/        — @smounters/imperium (core framework)
-└── imperium-cron/   — @smounters/imperium-cron (cron scheduling)
+├── imperium-cron/   — @smounters/imperium-cron (cron scheduling)
+└── imperium-events/ — @smounters/imperium-events (typed event emitter)
 ```
 
 ## Commands
@@ -27,6 +28,7 @@ pnpm run docs:build      # build docs
 Tag convention:
 - `vX.Y.Z` — publishes `@smounters/imperium`
 - `imperium-cron/vX.Y.Z` — publishes `@smounters/imperium-cron`
+- `imperium-events/vX.Y.Z` — publishes `@smounters/imperium-events`
 
 CI auto-detects package from tag, runs typecheck + test + build + publish.
 
