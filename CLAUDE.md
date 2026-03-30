@@ -40,3 +40,5 @@ TypeScript resolves types from `imperium/dist/`, so **core must be built first**
 - Commit messages: short, no AI references
 - All relative imports must use `.js` extensions (Node ESM compatibility)
 - Run `pnpm run typecheck && pnpm run test` before pushing
+- **Before publishing**: all changes must be reflected in docs (VitePress guide + README), CHANGELOG updated, docs:build must pass
+- Documentation is user-facing. No internal/CI/publishing instructions in docs — only in CLAUDE.md
