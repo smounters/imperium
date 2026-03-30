@@ -72,6 +72,9 @@ function buildRpcArgs(payload: unknown, context: HandlerContext, handler: Functi
       case "header":
         args[meta.index] = meta.key ? context.requestHeader.get(meta.key) : undefined;
         break;
+      case "abort_signal":
+        args[meta.index] = context.signal;
+        break;
     }
   }
 
@@ -167,6 +170,11 @@ export function createRpcHandler<TController extends Record<string, unknown>>(
         switchToRpc: () => ({
           getData: <T = unknown>() => req as T,
           getContext: <T = unknown>() => context as T,
+        }),
+        switchToWs: () => ({
+          getSocket: () => undefined,
+          getRequest: () => undefined,
+          getMessage: () => undefined,
         }),
       };
 

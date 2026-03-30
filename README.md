@@ -1,13 +1,15 @@
 # @smounters/imperium
 
-`@smounters/imperium` is **inspired by NestJS** and provides a modular DI-first runtime for TypeScript services using Fastify + ConnectRPC.
+`@smounters/imperium` is **inspired by NestJS** and provides a modular DI-first runtime for TypeScript services using Fastify + ConnectRPC + WebSocket.
 
 It is designed for teams that want Nest-like architecture but with explicit control over runtime wiring and exported API surface.
 
 ## Key Features
 
 - Nest-like modules and decorators (`@Module`, `@Injectable`, guards/pipes/interceptors/filters).
-- Unified HTTP + RPC server on one Fastify instance.
+- Unified HTTP + RPC + WebSocket server on one Fastify instance.
+- Server streaming RPC via `async function*` (delivered as SSE in browsers).
+- WebSocket gateway with message routing, lifecycle hooks, and guards at connection time.
 - Request-scoped handler execution.
 - Typed runtime config via `zod` + `ConfigService`.
 - Built-in `LoggerService` (tslog-based).
@@ -25,6 +27,7 @@ Use subpaths only:
 - `@smounters/imperium/services`
 - `@smounters/imperium/pipes`
 - `@smounters/imperium/validation`
+- `@smounters/imperium/ws`
 
 ## Installation
 
@@ -162,9 +165,39 @@ const rules = app.resolveAll<AmlRule>(AML_RULES);
 Use decorators from `@smounters/imperium/decorators`:
 
 - HTTP: `HttpController`, `Get`, `Post`, `Put`, `Patch`, `Delete`, `Body`, `Query`, `Param`, `Header`, `Req`, `Res`
-- RPC: `RpcService`, `RpcMethod`, `RpcData`, `RpcContext`, `RpcHeaders`, `RpcHeader`
+- RPC: `RpcService`, `RpcMethod`, `RpcData`, `RpcContext`, `RpcHeaders`, `RpcHeader`, `RpcAbortSignal`
+- WebSocket: `WsGateway`, `WsHandler`, `WsConnection`, `WsMessage`, `WsRequest`
 
-Imperium auto-detects registered HTTP/RPC handlers and serves both protocols from one server.
+Imperium auto-detects registered HTTP/RPC/WebSocket handlers and serves all protocols from one server.
+
+## WebSocket
+
+```ts
+import { WsGateway, WsHandler, WsConnection, WsMessage, Module } from "@smounters/imperium/decorators";
+import type { WsGatewayLifecycle } from "@smounters/imperium/ws";
+import type { WebSocket } from "@fastify/websocket";
+
+@WsGateway("/ws")
+class ChatGateway implements WsGatewayLifecycle {
+  private clients = new Set<WebSocket>();
+
+  onConnection(socket: WebSocket) { this.clients.add(socket); }
+  onDisconnect(socket: WebSocket) { this.clients.delete(socket); }
+
+  @WsHandler("message")
+  onMessage(@WsConnection() ws: WebSocket, @WsMessage() data: { text: string }) {
+    const msg = JSON.stringify({ type: "message", data });
+    for (const client of this.clients) {
+      if (client.readyState === 1) client.send(msg);
+    }
+  }
+}
+
+@Module({ providers: [ChatGateway] })
+class AppModule {}
+```
+
+Requires optional peer dependency: `pnpm add @fastify/websocket`
 
 ## Services
 

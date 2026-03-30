@@ -1,8 +1,8 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { AppContainer } from "../core/container";
 import type { HttpParamMeta } from "../core/types";
-import type { BaseContext, Constructor, ExceptionFilter, Guard, Interceptor, PipeTransform } from "../types";
 import { LoggerService } from "../services";
+import type { BaseContext, Constructor, ExceptionFilter, Guard, Interceptor, PipeTransform } from "../types";
 
 import { ForbiddenException, toHttpError } from "../core/errors";
 import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators";
@@ -185,6 +185,11 @@ export function createHttpHandler<TController extends Record<string, unknown>>(
           getData: () => undefined,
           getContext: () => undefined,
         }),
+        switchToWs: () => ({
+          getSocket: () => undefined,
+          getRequest: () => undefined,
+          getMessage: () => undefined,
+        }),
       };
 
       try {
@@ -225,7 +230,9 @@ export function createHttpHandler<TController extends Record<string, unknown>>(
           (interceptorLike) => resolveEnhancer<Interceptor>(requestScope, interceptorLike),
         );
 
-        const controllerHandler = ((instance[methodName] as Function).bind(instance)) as (...args: unknown[]) => Promise<unknown> | unknown;
+        const controllerHandler = (instance[methodName] as Function).bind(instance) as (
+          ...args: unknown[]
+        ) => Promise<unknown> | unknown;
 
         let idx = -1;
 

@@ -8,6 +8,7 @@ import { HTTP_ROUTES_KEY } from "../decorators/http.decorators";
 import { RPC_METHODS_KEY, RPC_SERVICE_KEY } from "../decorators/rpc.decorators";
 import { registerHttpRoutes } from "../http";
 import { buildConnectRoutes } from "../rpc";
+import { registerWsGateways } from "../ws";
 import type { CorsOptions, HealthCheck, HealthCheckResult, ServerOptions } from "../types";
 import { AppContainer } from "./container";
 
@@ -246,8 +247,10 @@ export async function startServer(
   const http = hasRegisteredHttpHandlers(di);
   const rpc = hasRegisteredRpcHandlers(di);
 
-  if (!http && !rpc && !healthConfig.enabled) {
-    throw new Error("No handlers found for HTTP or RPC. Register controllers in @Module().");
+  const ws = di.getWsGateways().length > 0;
+
+  if (!http && !rpc && !ws && !healthConfig.enabled) {
+    throw new Error("No handlers found for HTTP, RPC, or WebSocket. Register controllers in @Module().");
   }
 
   let server: FastifyInstance | undefined;
@@ -367,6 +370,10 @@ export async function startServer(
         prefix: effectiveRpcPrefix,
         routes: buildConnectRoutes(di),
       });
+    }
+
+    if (ws) {
+      await registerWsGateways(server, di);
     }
 
     await server.listen({ port: listenPort, host });

@@ -4,7 +4,7 @@
 
 Imperium is a modular DI framework for TypeScript services that need:
 
-- a single server for HTTP and RPC;
+- a single server for HTTP, RPC, and WebSocket;
 - module boundaries with explicit exports/imports;
 - request-scoped handlers;
 - Nest-like decorators and lifecycle hooks;
@@ -17,6 +17,7 @@ Imperium is a modular DI framework for TypeScript services that need:
 - [Modules and DI](/guide/modules-and-di)
 - [HTTP](/guide/http)
 - [RPC](/guide/rpc)
+- [WebSocket](/guide/websocket)
 - [Config and Logging](/guide/config-and-logging)
 - [Errors and Filters](/guide/errors-and-filters)
 - [API Surface](/reference/api-surface)
@@ -42,6 +43,7 @@ Root import is intentionally disabled. Use subpaths:
 - `@smounters/imperium/services`
 - `@smounters/imperium/pipes`
 - `@smounters/imperium/validation`
+- `@smounters/imperium/ws`
 
 Validation subpath also exports the built-in app config schema:
 

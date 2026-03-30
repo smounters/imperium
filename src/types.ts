@@ -4,7 +4,7 @@ import type { DependencyContainer, RegistrationOptions, InjectionToken as Tsyrin
 import type { ZodType } from "zod";
 
 export type Constructor<T = unknown> = new (...args: any[]) => T;
-export type ContextType = "http" | "rpc";
+export type ContextType = "http" | "rpc" | "ws";
 export type LoggerOptions = ISettingsParam<Record<string, unknown>>;
 export type InjectionToken<T = unknown> = TsyringeInjectionToken<T>;
 export type MetadataKey = string | symbol;
@@ -91,6 +91,12 @@ export interface RpcArgumentsHost {
   getContext<T = unknown>(): T | undefined;
 }
 
+export interface WsArgumentsHost {
+  getSocket<T = unknown>(): T | undefined;
+  getRequest(): FastifyRequest | undefined;
+  getMessage<T = unknown>(): T | undefined;
+}
+
 export interface BaseContext {
   type: ContextType;
   method: string;
@@ -104,6 +110,11 @@ export interface BaseContext {
     data: unknown;
     context: unknown;
   };
+  ws?: {
+    socket: unknown;
+    request: FastifyRequest;
+    message?: unknown;
+  };
   controller: Constructor;
   handler: Function;
   getType(): ContextType;
@@ -111,6 +122,7 @@ export interface BaseContext {
   getHandler(): Function;
   switchToHttp(): HttpArgumentsHost;
   switchToRpc(): RpcArgumentsHost;
+  switchToWs(): WsArgumentsHost;
 }
 
 export interface Guard {

@@ -2,6 +2,33 @@
 
 All notable changes to `@smounters/imperium` are documented in this file.
 
+## 1.1.0 - 2026-03-29
+
+### Added
+- **Server Streaming RPC** — `async function*` handlers via ConnectRPC. Delivered as SSE (Server-Sent Events) in browsers without WebSocket.
+- **`@RpcAbortSignal()` decorator** — injects `AbortSignal` from `HandlerContext.signal` for detecting client disconnects in streaming handlers.
+- **WebSocket Gateway** — real-time bidirectional communication via `@fastify/websocket` (optional peer dependency).
+  - `@WsGateway(path)` — marks a class as a WebSocket gateway, registers on the specified path.
+  - `@WsHandler(messageType)` — routes incoming JSON messages by `type` field.
+  - `@WsConnection()`, `@WsMessage()`, `@WsRequest()` — parameter decorators for handler methods.
+  - Lifecycle hooks: `onConnection(socket, req)`, `onDisconnect(socket)`.
+  - Guards execute at connection time (upgrade request).
+- **`./ws` subpath export** — `@smounters/imperium/ws` exposes `registerWsGateways`, `WsGatewayLifecycle`, and related types.
+- `BaseContext` extended with `type: "ws"`, `switchToWs()`, and `WsArgumentsHost` interface.
+
+### Changed
+- `ContextType` is now `"http" | "rpc" | "ws"` (was `"http" | "rpc"`).
+- `RpcParamSource` extended with `"abort_signal"`.
+- RPC router builder no longer throws on `server_streaming` methods; only `client_streaming` and `bidi_streaming` are unsupported.
+- `WsArgumentsHost` methods return `| undefined` for type safety across context switches (no unsafe casts).
+- Peer dependency `@fastify/websocket ^11.0.0` added as optional.
+
+### Updated
+- `@types/node` 24.x → 25.x.
+- `@typescript-eslint/*` 8.56 → 8.57.
+- `eslint` 10.0 → 10.1.
+- `fastify` 5.7 → 5.8.
+
 ## 1.0.3 - 2026-03-20
 
 ### Fixed

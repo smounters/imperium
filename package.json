@@ -31,6 +31,10 @@
     "./validation": {
       "types": "./dist/validation/index.d.ts",
       "import": "./dist/validation/index.js"
+    },
+    "./ws": {
+      "types": "./dist/ws/index.d.ts",
+      "import": "./dist/ws/index.js"
     }
   },
   "files": [
@@ -71,23 +75,30 @@
     "@connectrpc/connect": "^2.1.1",
     "@connectrpc/connect-fastify": "^2.1.1",
     "@fastify/cors": "^11.2.0",
+    "@fastify/websocket": "^11.0.0",
     "fastify": "^5.7.4",
-    "tsyringe": "^4.10.0",
     "reflect-metadata": "^0.2.2",
     "tslog": "^4.10.2",
+    "tsyringe": "^4.10.0",
     "typescript": "^5.9.3",
     "zod": "^4.3.6"
   },
+  "peerDependenciesMeta": {
+    "@fastify/websocket": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@types/node": "^24.5.2",
-    "@typescript-eslint/eslint-plugin": "^8.56.0",
-    "@typescript-eslint/parser": "^8.56.0",
     "@connectrpc/connect": "^2.1.1",
     "@connectrpc/connect-fastify": "^2.1.1",
     "@fastify/cors": "^11.2.0",
-    "eslint": "^10.0.0",
+    "@fastify/websocket": "^11.2.0",
+    "@types/node": "^25.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
-    "fastify": "^5.7.4",
+    "fastify": "^5.8.4",
     "prettier": "^3.8.1",
     "reflect-metadata": "^0.2.2",
     "tslog": "^4.10.2",
@@ -95,6 +106,5 @@
     "typescript": "^5.9.3",
     "vitepress": "^1.6.4",
     "zod": "^4.3.6"
-  },
-  "dependencies": {}
+  }
 }

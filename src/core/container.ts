@@ -3,6 +3,7 @@ import { container, Lifecycle, type DependencyContainer } from "tsyringe";
 import { AsyncLocalStorage } from "node:async_hooks";
 
 import { MODULE_KEY } from "../decorators/di.decorators";
+import { WS_GATEWAY_KEY } from "../decorators/ws.decorators";
 import type {
   BeforeApplicationShutdown,
   Constructor,
@@ -217,8 +218,10 @@ export class AppContainer {
   private readonly loadingModules = new Set<ModuleLoadKey>();
   private readonly rpcControllerSet = new Set<Constructor>();
   private readonly httpControllerSet = new Set<Constructor>();
+  private readonly wsGatewaySet = new Set<Constructor>();
   private readonly rpcControllerModules = new Map<Constructor, ModuleRef>();
   private readonly httpControllerModules = new Map<Constructor, ModuleRef>();
+  private readonly wsGatewayModules = new Map<Constructor, ModuleRef>();
   private readonly lifecycleTargets: LifecycleTargetRef[] = [];
   private readonly requestScopeOwners = new WeakMap<DependencyContainer, ModuleRef | undefined>();
   private readonly requestScopeLinkedScopes = new WeakMap<DependencyContainer, Set<DependencyContainer>>();
@@ -227,6 +230,7 @@ export class AppContainer {
   private rootModuleRef: ModuleRef | null = null;
   private controllers: Constructor[] = [];
   private httpControllers: Constructor[] = [];
+  private wsGateways: Constructor[] = [];
   private lifecycleInstances: unknown[] | null = null;
   private initialized = false;
   private closed = false;
@@ -482,7 +486,7 @@ export class AppContainer {
   }
 
   private resolveControllerModule(controller: Constructor): ModuleRef | undefined {
-    return this.httpControllerModules.get(controller) ?? this.rpcControllerModules.get(controller);
+    return this.httpControllerModules.get(controller) ?? this.rpcControllerModules.get(controller) ?? this.wsGatewayModules.get(controller);
   }
 
   private getOrCreateLinkedScopes(originScope: DependencyContainer): Set<DependencyContainer> {
@@ -622,6 +626,19 @@ export class AppContainer {
         this.httpControllerSet.add(ctrl);
         this.httpControllerModules.set(ctrl, moduleRef);
         this.httpControllers.push(ctrl);
+      }
+
+      // Detect WS gateways among providers
+      for (const provider of meta.providers) {
+        const providerClass = typeof provider === "function" ? provider : undefined;
+
+        if (providerClass && Reflect.hasMetadata(WS_GATEWAY_KEY, providerClass)) {
+          if (!this.wsGatewaySet.has(providerClass)) {
+            this.wsGatewaySet.add(providerClass);
+            this.wsGatewayModules.set(providerClass, moduleRef);
+            this.wsGateways.push(providerClass);
+          }
+        }
       }
 
       moduleRef.exportedTokens = this.resolveModuleExports(moduleRef);
@@ -902,6 +919,10 @@ export class AppContainer {
 
   getHttpControllers(): Constructor[] {
     return [...this.httpControllers];
+  }
+
+  getWsGateways(): Constructor[] {
+    return [...this.wsGateways];
   }
 
   setGlobalGuards(guards: GuardLike[]): void {

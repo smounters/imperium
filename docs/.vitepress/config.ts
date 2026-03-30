@@ -4,7 +4,7 @@ const base = process.env.DOCS_BASE?.trim() || "/";
 
 export default defineConfig({
   title: "Imperium",
-  description: "NestJS-inspired DI container with unified HTTP + Connect RPC server.",
+  description: "NestJS-inspired DI container with unified HTTP + Connect RPC + WebSocket server.",
   base,
   lastUpdated: true,
   cleanUrls: true,
@@ -25,6 +25,7 @@ export default defineConfig({
             { text: "Modules and DI", link: "/guide/modules-and-di" },
             { text: "HTTP", link: "/guide/http" },
             { text: "RPC", link: "/guide/rpc" },
+            { text: "WebSocket", link: "/guide/websocket" },
             { text: "Config and Logging", link: "/guide/config-and-logging" },
             { text: "Errors and Filters", link: "/guide/errors-and-filters" },
           ],

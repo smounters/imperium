@@ -69,3 +69,4 @@ export const RpcData = (key?: string) => rpcParamDecorator("data", key);
 export const RpcContext = () => rpcParamDecorator("context");
 export const RpcHeaders = () => rpcParamDecorator("headers");
 export const RpcHeader = (key: string) => rpcParamDecorator("header", key);
+export const RpcAbortSignal = () => rpcParamDecorator("abort_signal");

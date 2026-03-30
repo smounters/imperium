@@ -25,12 +25,14 @@ Type exports (selected):
 - `Guard`, `Interceptor`, `PipeTransform`, `ExceptionFilter`
 - lifecycle hooks: `OnModuleInit`, `OnApplicationBootstrap`, `OnModuleDestroy`, `BeforeApplicationShutdown`, `OnApplicationShutdown`
 - `ServerOptions`, `CorsOptions`, `HealthOptions`, `LoggerOptions`
+- `BaseContext`, `ContextType`, `HttpArgumentsHost`, `RpcArgumentsHost`, `WsArgumentsHost`
 
 ## `@smounters/imperium/decorators`
 
 - DI: `Module`, `Injectable`, `Inject`, `InjectAll`, `Optional`, `Scope`
 - HTTP: `HttpController`, `Get`, `Post`, `Put`, `Patch`, `Delete`, `Body`, `Query`, `Param`, `Header`, `Req`, `Res`
-- RPC: `RpcService`, `RpcMethod`, `RpcData`, `RpcContext`, `RpcHeaders`, `RpcHeader`
+- RPC: `RpcService`, `RpcMethod`, `RpcData`, `RpcContext`, `RpcHeaders`, `RpcHeader`, `RpcAbortSignal`
+- WebSocket: `WsGateway`, `WsHandler`, `WsConnection`, `WsMessage`, `WsRequest`
 - Enhancers: `UseGuards`, `UsePipes`, `UseInterceptors`, `UseFilters`, `Catch`
 - Metadata: `SetMetadata`
 
@@ -52,3 +54,13 @@ Type exports (selected):
 - `nativeEnumSchema`
 - `stringArraySchema`
 - `enumArraySchema`
+
+## `@smounters/imperium/ws`
+
+- `registerWsGateways`
+- `handleWsConnection`
+
+Type exports:
+
+- `WsGatewayLifecycle`
+- `WsGatewayMeta`, `WsHandlerMeta`, `WsParamMeta`, `WsParamSource`

@@ -16,7 +16,7 @@ export interface HttpParamMeta {
   key?: string;
 }
 
-export type RpcParamSource = "data" | "context" | "headers" | "header";
+export type RpcParamSource = "data" | "context" | "headers" | "header" | "abort_signal";
 
 export interface RpcParamMeta {
   index: number;

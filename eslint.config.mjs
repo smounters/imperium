@@ -3,6 +3,9 @@ import tsParser from "@typescript-eslint/parser";
 import prettier from "eslint-config-prettier";
 
 export default [
+  {
+    ignores: ["node_modules/**", "dist/**"],
+  },
   prettier,
   {
     files: ["src/**/*.{ts,tsx}"],

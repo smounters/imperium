@@ -5,4 +5,5 @@ export { Body, Delete, Get, Header, HttpController, Param, Patch, Post, Put, Que
 export { UseInterceptors } from "./interceptors.decorators";
 export { SetMetadata } from "./metadata.decorators";
 export { UsePipes } from "./pipes.decorators";
-export { RpcContext, RpcData, RpcHeader, RpcHeaders, RpcMethod, RpcService } from "./rpc.decorators";
+export { RpcAbortSignal, RpcContext, RpcData, RpcHeader, RpcHeaders, RpcMethod, RpcService } from "./rpc.decorators";
+export { WsConnection, WsGateway, WsHandler, WsMessage, WsRequest } from "./ws.decorators";

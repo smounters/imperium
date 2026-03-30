@@ -22,6 +22,7 @@ class AuthRpcController {
 - `@RpcContext()`
 - `@RpcHeaders()`
 - `@RpcHeader(name)`
+- `@RpcAbortSignal()` — injects `AbortSignal` (useful for streaming)
 
 ```ts
 @RpcMethod(AuthRPC.method.signIn)
@@ -32,6 +33,39 @@ async signIn(
   return { email, requestId };
 }
 ```
+
+## Server Streaming
+
+Imperium supports server streaming RPC via `async function*`. ConnectRPC delivers this as SSE (Server-Sent Events) in browsers — no WebSocket needed.
+
+```ts
+import { RpcAbortSignal, RpcData, RpcMethod, RpcService } from "@smounters/imperium/decorators";
+import { EventsService } from "@proto/events_pb";
+import type { HandlerContext } from "@connectrpc/connect";
+
+@RpcService(EventsService)
+class EventsController {
+  @RpcMethod(EventsService.method.streamEvents)
+  async *streamEvents(
+    @RpcData() req: { channel: string },
+    @RpcAbortSignal() signal: AbortSignal,
+  ) {
+    while (!signal.aborted) {
+      const events = await fetchNewEvents(req.channel);
+      for (const event of events) {
+        yield event;
+      }
+      await sleep(1000);
+    }
+  }
+}
+```
+
+Guards and pipes run before the generator starts. Filters catch errors thrown during iteration. Interceptors are **not** applied to streaming methods — they wrap single responses by design.
+
+::: info Supported method kinds
+Only `unary` and `server_streaming` are supported. Client streaming and bidirectional streaming will throw at startup.
+:::
 
 ## Unified Server
 
