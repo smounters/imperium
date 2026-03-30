@@ -32,8 +32,8 @@ function uniqueByEnhancer<T>(values: T[]): T[] {
 }
 
 function readClassAndMethodMeta<T>(metadataKey: string | symbol, controller: Constructor, method: string): T[] {
-  const classValues = (reflector.get<T[]>(metadataKey, controller) ?? []) as T[];
-  const methodValues = (reflector.get<T[]>(metadataKey, controller.prototype[method]) ?? []) as T[];
+  const classValues = (reflector.get<T[]>(metadataKey, controller) ?? []);
+  const methodValues = (reflector.get<T[]>(metadataKey, controller.prototype[method]) ?? []);
 
   return [...classValues, ...methodValues];
 }

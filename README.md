@@ -1,41 +1,24 @@
 # @smounters/imperium
 
-`@smounters/imperium` is **inspired by NestJS** and provides a modular DI-first runtime for TypeScript services using Fastify + ConnectRPC + WebSocket.
+NestJS-inspired modular DI framework for TypeScript services. Unified HTTP + ConnectRPC + WebSocket server on a single Fastify instance.
 
-It is designed for teams that want Nest-like architecture but with explicit control over runtime wiring and exported API surface.
+## Features
 
-## Key Features
+- **Module system** with `@Module`, `@Injectable`, guards, pipes, interceptors, filters
+- **HTTP controllers** with `@HttpController`, `@Get`, `@Post`, `@Body`, `@Query`, `@Param`
+- **ConnectRPC** with `@RpcService`, `@RpcMethod` (unary + server streaming)
+- **WebSocket gateway** with `@WsGateway`, `@WsHandler`, message routing, lifecycle hooks
+- **Request-scoped DI** via AsyncLocalStorage (tsyringe-based)
+- **Typed config** via Zod + `ConfigService`
+- **Structured logging** via tslog + `LoggerService`
 
-- Nest-like modules and decorators (`@Module`, `@Injectable`, guards/pipes/interceptors/filters).
-- Unified HTTP + RPC + WebSocket server on one Fastify instance.
-- Server streaming RPC via `async function*` (delivered as SSE in browsers).
-- WebSocket gateway with message routing, lifecycle hooks, and guards at connection time.
-- Request-scoped handler execution.
-- Typed runtime config via `zod` + `ConfigService`.
-- Built-in `LoggerService` (tslog-based).
-- Global enhancer tokens (`APP_GUARD`, `APP_PIPE`, `APP_INTERCEPTOR`, `APP_FILTER`).
-- Multi-provider array injection (`InjectAll`) and manual array resolution (`resolveAll`).
-
-## Public Imports
-
-Root import is intentionally disabled.
-
-Use subpaths only:
-
-- `@smounters/imperium/core`
-- `@smounters/imperium/decorators`
-- `@smounters/imperium/services`
-- `@smounters/imperium/pipes`
-- `@smounters/imperium/validation`
-- `@smounters/imperium/ws`
-
-## Installation
+## Install
 
 ```bash
-pnpm add @smounters/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod
+pnpm add @smounters/imperium reflect-metadata tsyringe fastify @connectrpc/connect @connectrpc/connect-fastify zod tslog
 ```
 
-TypeScript requirements:
+TypeScript config requires:
 
 ```json
 {
@@ -46,220 +29,78 @@ TypeScript requirements:
 }
 ```
 
-Entry point must import metadata:
-
-```ts
-import "reflect-metadata";
-```
-
 ## Quick Start
 
 ```ts
 import "reflect-metadata";
-
 import { Application } from "@smounters/imperium/core";
 import { Body, HttpController, Injectable, Module, Post } from "@smounters/imperium/decorators";
 
 @Injectable()
-class AuthService {
-  signIn(email: string) {
-    return { ok: true, email };
+class GreetService {
+  greet(name: string) {
+    return { message: `Hello, ${name}` };
   }
 }
 
-@HttpController("/auth")
-class AuthHttpController {
-  constructor(private readonly authService: AuthService) {}
+@HttpController("/api")
+class ApiController {
+  constructor(private readonly greetService: GreetService) {}
 
-  @Post("/sign-in")
-  signIn(@Body("email") email: string) {
-    return this.authService.signIn(email);
+  @Post("/greet")
+  greet(@Body("name") name: string) {
+    return this.greetService.greet(name);
   }
 }
 
 @Module({
-  providers: [AuthService],
-  httpControllers: [AuthHttpController],
+  providers: [GreetService],
+  httpControllers: [ApiController],
 })
 class AppModule {}
 
-const app = new Application(AppModule, {
-  host: "0.0.0.0",
-  accessLogs: true,
-});
-
-await app.start({ port: 3000 });
+await new Application(AppModule).start({ port: 3000 });
 ```
-
-## Recommended Bootstrap Flow
-
-```ts
-import { Application } from "@smounters/imperium/core";
-import { ConfigService, LoggerService } from "@smounters/imperium/services";
-import { appConfigSchema, type AppConfig } from "@smounters/imperium/validation";
-
-const app = new Application(AppModule, {
-  host: "0.0.0.0",
-  accessLogs: true,
-});
-
-app.configureConfig(appConfigSchema, process.env);
-
-const config = app.resolve(ConfigService<AppConfig>).getAll();
-
-app.configureLogger({
-  name: "backend",
-  minLevel: 3,
-});
-
-await app.start({
-  port: config.APP_PORT,
-  prefix: config.APP_GLOBAL_PREFIX,
-});
-
-app.resolve(LoggerService).info({ event: "app.started", port: config.APP_PORT });
-```
-
-If your app needs extra config fields, extend the exported base schema:
-
-```ts
-import { appConfigSchema } from "@smounters/imperium/validation";
-import { z } from "zod";
-
-const projectConfigSchema = appConfigSchema.extend({
-  REDIS_URL: z.url(),
-});
-```
-
-## Multi Providers
-
-```ts
-import { InjectAll, Injectable, Module } from "@smounters/imperium/decorators";
-
-const AML_RULES = Symbol("AML_RULES");
-
-@Module({
-  providers: [
-    { provide: AML_RULES, multi: true, useClass: SanctionsRule },
-    { provide: AML_RULES, multi: true, useClass: MixerRule },
-    { provide: AML_RULES, multi: true, useClass: FreshAddressRule },
-  ],
-  exports: [AML_RULES],
-})
-class AmlModule {}
-
-@Injectable()
-class AmlEngine {
-  constructor(@InjectAll(AML_RULES) private readonly rules: AmlRule[]) {}
-}
-```
-
-Manual resolution is also available:
-
-```ts
-const rules = app.resolveAll<AmlRule>(AML_RULES);
-```
-
-## HTTP and RPC
-
-Use decorators from `@smounters/imperium/decorators`:
-
-- HTTP: `HttpController`, `Get`, `Post`, `Put`, `Patch`, `Delete`, `Body`, `Query`, `Param`, `Header`, `Req`, `Res`
-- RPC: `RpcService`, `RpcMethod`, `RpcData`, `RpcContext`, `RpcHeaders`, `RpcHeader`, `RpcAbortSignal`
-- WebSocket: `WsGateway`, `WsHandler`, `WsConnection`, `WsMessage`, `WsRequest`
-
-Imperium auto-detects registered HTTP/RPC/WebSocket handlers and serves all protocols from one server.
 
 ## WebSocket
 
 ```ts
-import { WsGateway, WsHandler, WsConnection, WsMessage, Module } from "@smounters/imperium/decorators";
+import { WsGateway, WsHandler, WsConnection, WsMessage } from "@smounters/imperium/decorators";
 import type { WsGatewayLifecycle } from "@smounters/imperium/ws";
 import type { WebSocket } from "@fastify/websocket";
 
 @WsGateway("/ws")
-class ChatGateway implements WsGatewayLifecycle {
+class EventsGateway implements WsGatewayLifecycle {
   private clients = new Set<WebSocket>();
 
   onConnection(socket: WebSocket) { this.clients.add(socket); }
   onDisconnect(socket: WebSocket) { this.clients.delete(socket); }
 
-  @WsHandler("message")
-  onMessage(@WsConnection() ws: WebSocket, @WsMessage() data: { text: string }) {
-    const msg = JSON.stringify({ type: "message", data });
-    for (const client of this.clients) {
-      if (client.readyState === 1) client.send(msg);
-    }
+  @WsHandler("ping")
+  onPing(@WsConnection() ws: WebSocket) {
+    ws.send(JSON.stringify({ type: "pong" }));
   }
 }
-
-@Module({ providers: [ChatGateway] })
-class AppModule {}
 ```
 
 Requires optional peer dependency: `pnpm add @fastify/websocket`
 
-## Services
+## Import Paths
 
-From `@smounters/imperium/services`:
+No root import. Use subpaths:
 
-- `ConfigService`
-- `LoggerService`
-
-## Pipes and Validation
-
-- `ZodPipe` from `@smounters/imperium/pipes`
-- validation helpers from `@smounters/imperium/validation`
-  - `appConfigSchema`
-  - `AppConfig`
-  - `booleanSchema`
-  - `numberSchema`
-  - `nativeEnumSchema`
-  - `stringArraySchema`
-  - `enumArraySchema`
-
-## Error Classes
-
-From `@smounters/imperium/core`:
-
-- `HttpException`
-- `BadRequestException`
-- `UnauthorizedException`
-- `ForbiddenException`
-- `NotFoundException`
-- `InternalServerErrorException`
+```ts
+import { Application } from "@smounters/imperium/core";
+import { Module, Injectable, HttpController, Get } from "@smounters/imperium/decorators";
+import { ConfigService, LoggerService } from "@smounters/imperium/services";
+import { ZodPipe } from "@smounters/imperium/pipes";
+import { appConfigSchema } from "@smounters/imperium/validation";
+import { registerWsGateways } from "@smounters/imperium/ws";
+```
 
 ## Documentation
 
-Full docs (VitePress) are located in:
-
-- `docs`
-
-Local docs commands:
-
-```bash
-pnpm run docs:dev
-pnpm run docs:build
-```
-
-GitHub Pages deployment is configured via `.github/workflows/publish.yml`.
-
-## Publish to npm
-
-```bash
-pnpm install
-pnpm run typecheck
-pnpm run build
-pnpm publish --access public --no-git-checks
-```
-
-Automated npm publishing workflow:
-
-- `.github/workflows/publish.yml`
-
-Required secret:
-
-- `NPM_TOKEN`
+Full guide and API reference: **[smounters.github.io/imperium](https://smounters.github.io/imperium/)**
 
 ## License
 

@@ -46,7 +46,7 @@ function getMetaTarget(target: object, propertyKey?: string | symbol): object {
     throw new Error("Decorator target is not an object");
   }
 
-  return value as object;
+  return value!;
 }
 
 function setParamMeta(target: object, propertyKey: string | symbol | undefined, meta: HttpParamMeta): void {

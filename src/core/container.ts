@@ -9,7 +9,6 @@ import type {
   Constructor,
   DynamicModule,
   ExceptionFilterLike,
-  FactoryProvider,
   GuardLike,
   InjectionToken,
   InterceptorLike,
@@ -357,7 +356,7 @@ export class AppContainer {
     }
 
     if ("useFactory" in provider) {
-      return (provider as FactoryProvider).useFactory(moduleRef.container) as T;
+      return (provider).useFactory(moduleRef.container) as T;
     }
 
     if ("useExisting" in provider) {
@@ -422,7 +421,7 @@ export class AppContainer {
 
     if ("useFactory" in provider) {
       moduleRef.container.register(provider.provide, {
-        useFactory: (dc) => (provider as FactoryProvider).useFactory(dc),
+        useFactory: (dc) => (provider).useFactory(dc),
       });
       return;
     }
@@ -664,9 +663,7 @@ export class AppContainer {
   loadModule(moduleImport: ModuleImport): void {
     const moduleRef = this.loadModuleRef(moduleImport);
 
-    if (!this.rootModuleRef) {
-      this.rootModuleRef = moduleRef;
-    }
+    this.rootModuleRef ??= moduleRef;
   }
 
   resolve<T>(token: InjectionToken<T>): T {
@@ -750,7 +747,7 @@ export class AppContainer {
   }
 
   getConfig<TConfig extends Record<string, unknown> = Record<string, unknown>>(): Readonly<TConfig> {
-    return this.resolve(CONFIG_TOKEN) as Readonly<TConfig>;
+    return this.resolve(CONFIG_TOKEN);
   }
 
   async init(): Promise<void> {

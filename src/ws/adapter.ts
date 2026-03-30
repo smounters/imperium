@@ -16,7 +16,7 @@ type RequestScope = ReturnType<AppContainer["createRequestScope"]>;
 const reflector = new Reflector();
 
 function collectGuardsForWs(gateway: Constructor, app: AppContainer): GuardLike[] {
-  const classGuards = (reflector.get<GuardLike[]>(GUARDS_KEY, gateway) ?? []) as GuardLike[];
+  const classGuards = (reflector.get<GuardLike[]>(GUARDS_KEY, gateway) ?? []);
   return [...app.getGlobalGuards(), ...classGuards];
 }
 
@@ -91,7 +91,7 @@ function buildWsContext(
     switchToWs: (): WsArgumentsHost => ({
       getSocket: () => socket,
       getRequest: () => request,
-      getMessage: <T = unknown>() => message as T | undefined,
+      getMessage: () => message,
     }),
   };
 }
@@ -152,16 +152,16 @@ export function handleWsConnection(
 
     // Route messages to handlers
     socket.on("message", (raw: Buffer | ArrayBuffer | Buffer[]) => {
-      (async () => {
+      void (async () => {
         try {
-          const msg = JSON.parse(raw.toString()) as { type?: string; data?: unknown };
+          const msg = JSON.parse(String(raw)) as { type?: string; data?: unknown };
           const handler = handlers.find((h) => h.messageType === msg.type);
 
           if (!handler) {
             return;
           }
 
-          const handlerFn = (instance as Record<string, Function>)[handler.handlerName]!;
+          const handlerFn = (instance as Record<string, Function>)[handler.handlerName];
           const args = buildWsArgs(socket, request, msg.data, handlerFn);
           await handlerFn.apply(instance, args);
         } catch (error) {
@@ -175,7 +175,7 @@ export function handleWsConnection(
 
     // Cleanup on disconnect
     socket.on("close", () => {
-      (async () => {
+      void (async () => {
         try {
           if (typeof instance.onDisconnect === "function") {
             await instance.onDisconnect(socket);
@@ -211,6 +211,7 @@ export function handleWsConnection(
       // socket may already be closed
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     app.disposeRequestScope(scope).catch(() => {});
   });
 }

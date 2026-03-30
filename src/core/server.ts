@@ -49,14 +49,14 @@ function normalizePrefix(prefix: string | undefined): string {
   return withLeadingSlash;
 }
 
-function mergePrefixes(...prefixes: Array<string | undefined>): string {
+function mergePrefixes(...prefixes: (string | undefined)[]): string {
   const normalized = prefixes.map((prefix) => normalizePrefix(prefix)).filter((prefix) => prefix.length > 0);
   return normalized.join("");
 }
 
 function hasRegisteredHttpHandlers(di: AppContainer): boolean {
   for (const controller of di.getHttpControllers()) {
-    const routes = Reflect.getMetadata(HTTP_ROUTES_KEY, controller) as Array<unknown> | undefined;
+    const routes = Reflect.getMetadata(HTTP_ROUTES_KEY, controller) as unknown[] | undefined;
 
     if ((routes?.length ?? 0) > 0) {
       return true;
@@ -73,7 +73,7 @@ function hasRegisteredRpcHandlers(di: AppContainer): boolean {
       continue;
     }
 
-    const methods = Reflect.getMetadata(RPC_METHODS_KEY, controller) as Array<unknown> | undefined;
+    const methods = Reflect.getMetadata(RPC_METHODS_KEY, controller) as unknown[] | undefined;
 
     if ((methods?.length ?? 0) > 0) {
       return true;
@@ -281,9 +281,10 @@ export async function startServer(
     const effectiveHttpPrefix = mergePrefixes(prefix, httpPrefix);
     const effectiveRpcPrefix = mergePrefixes(prefix, rpcPrefix);
 
-    server.addHook("onRequest", async (req) => {
+    server.addHook("onRequest", (req, _reply, done) => {
       const request = req as RequestWithScope;
       request.requestStartAt = Date.now();
+      done();
     });
 
     server.addHook("onResponse", async (req, reply) => {

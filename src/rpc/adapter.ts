@@ -214,7 +214,7 @@ export function createRpcHandler<TController extends Record<string, unknown>>(
         const next = async (): Promise<RpcResponse> => {
           idx++;
           if (idx < interceptors.length) {
-            return (await interceptors[idx]!.intercept(ctx, next)) as RpcResponse;
+            return (await interceptors[idx].intercept(ctx, next)) as RpcResponse;
           }
 
           return controllerHandler(...args);
@@ -241,7 +241,7 @@ export function createRpcHandler<TController extends Record<string, unknown>>(
         const filtered = await runRpcFilters(error, filters, ctx);
 
         if (filtered.handled) {
-          return filtered.result as RpcResponse;
+          return filtered.result!;
         }
 
         throw toConnectError(filtered.error, {

@@ -232,14 +232,14 @@ export function createHttpHandler<TController extends Record<string, unknown>>(
 
         const controllerHandler = (instance[methodName] as Function).bind(instance) as (
           ...args: unknown[]
-        ) => Promise<unknown> | unknown;
+        ) => Promise<unknown>;
 
         let idx = -1;
 
         const next = async (): Promise<unknown> => {
           idx++;
           if (idx < interceptors.length) {
-            return interceptors[idx]!.intercept(ctx, next);
+            return interceptors[idx].intercept(ctx, next);
           }
 
           return controllerHandler(...transformedArgs);

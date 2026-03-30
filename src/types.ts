@@ -52,7 +52,7 @@ interface BaseModuleMeta {
   global?: boolean;
 }
 
-export interface ModuleMeta extends BaseModuleMeta {}
+export type ModuleMeta = BaseModuleMeta;
 
 export interface DynamicModule extends BaseModuleMeta {
   module: Constructor;
@@ -92,9 +92,9 @@ export interface RpcArgumentsHost {
 }
 
 export interface WsArgumentsHost {
-  getSocket<T = unknown>(): T | undefined;
+  getSocket(): unknown;
   getRequest(): FastifyRequest | undefined;
-  getMessage<T = unknown>(): T | undefined;
+  getMessage(): unknown;
 }
 
 export interface BaseContext {
@@ -146,7 +146,7 @@ export interface PipeTransform<TIn = unknown, TOut = unknown> {
 export type PipeLike = Constructor<PipeTransform> | PipeTransform;
 
 export interface ExceptionFilter<T = unknown> {
-  catch(exception: T, ctx: BaseContext): Promise<unknown> | unknown;
+  catch(exception: T, ctx: BaseContext): unknown;
 }
 
 export type ExceptionFilterLike = Constructor<ExceptionFilter> | ExceptionFilter;
@@ -158,7 +158,7 @@ export interface ConfigServiceOptions<TSchema extends ZodType = ZodType> {
 
 export interface CorsOptions {
   enabled?: boolean;
-  origin?: string | boolean | RegExp | Array<string | boolean | RegExp>;
+  origin?: string | boolean | RegExp | (string | boolean | RegExp)[];
   credentials?: boolean;
   exposedHeaders?: string | string[];
   allowedHeaders?: string | string[];

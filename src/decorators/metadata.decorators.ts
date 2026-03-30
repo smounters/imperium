@@ -12,7 +12,7 @@ function getMetaTarget(target: object, propertyKey?: string | symbol): object {
     throw new Error("Decorator target is not an object");
   }
 
-  return value as object;
+  return value!;
 }
 
 export function SetMetadata<T = unknown>(metadataKey: MetadataKey, metadataValue: T): ClassDecorator & MethodDecorator {

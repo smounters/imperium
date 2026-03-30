@@ -6,7 +6,7 @@ export const WS_GATEWAY_KEY = Symbol("ws:gateway");
 export const WS_HANDLERS_KEY = Symbol("ws:handlers");
 export const WS_PARAMS_KEY = Symbol("ws:params");
 
-export function WsGateway(path: string = "/ws"): ClassDecorator {
+export function WsGateway(path = "/ws"): ClassDecorator {
   return (target) => {
     Injectable()(target as never);
     const meta: WsGatewayMeta = { path };
@@ -33,7 +33,7 @@ function getMetaTarget(target: object, propertyKey?: string | symbol): object {
     throw new Error("Decorator target is not an object");
   }
 
-  return value as object;
+  return value!;
 }
 
 function setParamMeta(target: object, propertyKey: string | symbol | undefined, meta: WsParamMeta): void {

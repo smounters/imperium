@@ -1,28 +1,32 @@
-import tsPlugin from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
+import eslint from "@eslint/js";
 import prettier from "eslint-config-prettier";
+import tseslint from "typescript-eslint";
 
-export default [
-  {
-    ignores: ["node_modules/**", "dist/**"],
-  },
+export default tseslint.config(
+  { ignores: ["node_modules/**", "dist/**"] },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   prettier,
   {
-    files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
-      parser: tsParser,
       parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: "module",
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
-    plugins: {
-      "@typescript-eslint": tsPlugin,
-    },
+  },
+  {
+    files: ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}"],
     rules: {
+      // DI framework relies on reflect-metadata which produces any types
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-function-type": "off",
+      "@typescript-eslint/no-base-to-string": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -50,4 +54,4 @@ export default [
       ],
     },
   },
-];
+);
