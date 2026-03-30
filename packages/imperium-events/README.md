@@ -72,6 +72,10 @@ Injectable service:
 - `emit(event, payload?)` — emit an event. All matching handlers run concurrently. Errors in individual handlers are caught and logged without blocking others.
 - `getHandlers()` — returns registered handlers (for introspection/testing)
 
+## Documentation
+
+Full guide: **[smounters.github.io/imperium/guide/events](https://smounters.github.io/imperium/guide/events)**
+
 ## License
 
 MIT

@@ -25,6 +25,8 @@ export default defineConfig({
             { text: "HTTP", link: "/guide/http" },
             { text: "RPC", link: "/guide/rpc" },
             { text: "WebSocket", link: "/guide/websocket" },
+            { text: "Cron", link: "/guide/cron" },
+            { text: "Events", link: "/guide/events" },
             { text: "Config and Logging", link: "/guide/config-and-logging" },
             { text: "Errors and Filters", link: "/guide/errors-and-filters" },
           ],

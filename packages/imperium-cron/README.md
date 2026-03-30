@@ -57,6 +57,10 @@ Injectable service for introspection:
 - `getJobs()` — returns list of registered jobs with name, expression, running status
 - `stopAll()` — stops all jobs (called automatically on shutdown)
 
+## Documentation
+
+Full guide: **[smounters.github.io/imperium/guide/cron](https://smounters.github.io/imperium/guide/cron)**
+
 ## License
 
 MIT

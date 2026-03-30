@@ -18,6 +18,8 @@ Imperium is a modular DI framework for TypeScript services that need:
 - [HTTP](/guide/http)
 - [RPC](/guide/rpc)
 - [WebSocket](/guide/websocket)
+- [Cron](/guide/cron)
+- [Events](/guide/events)
 - [Config and Logging](/guide/config-and-logging)
 - [Errors and Filters](/guide/errors-and-filters)
 - [API Surface](/reference/api-surface)

@@ -64,3 +64,19 @@ Type exports:
 
 - `WsGatewayLifecycle`
 - `WsGatewayMeta`, `WsHandlerMeta`, `WsParamMeta`, `WsParamSource`
+
+## `@smounters/imperium-cron` <Badge type="tip" text="separate package" />
+
+- `Cron` — method decorator
+- `CronModule` — dynamic module (`CronModule.register({ providers })`)
+- `CronService` — injectable (`getJobs()`, `stopAll()`)
+
+Install: `pnpm add @smounters/imperium-cron` — [Guide](/guide/cron)
+
+## `@smounters/imperium-events` <Badge type="tip" text="separate package" />
+
+- `OnEvent` — method decorator (supports wildcards)
+- `EventModule` — dynamic module (`EventModule.register({ listeners })`)
+- `EventService` — injectable (`emit()`, `getHandlers()`)
+
+Install: `pnpm add @smounters/imperium-events` — [Guide](/guide/events)
