@@ -3,10 +3,9 @@
 ## Service Decorators
 
 ```ts
-import { Injectable, RpcMethod, RpcService } from "@smounters/imperium/decorators";
-import { AuthRPC } from "@smounters/proto/public/auth_pb";
+import { Module, RpcMethod, RpcService } from "@smounters/imperium/decorators";
+import { AuthRPC } from "@proto/public/auth_pb";
 
-@Injectable()
 @RpcService(AuthRPC)
 class AuthRpcController {
   @RpcMethod(AuthRPC.method.signIn)
@@ -14,6 +13,11 @@ class AuthRpcController {
     return { email: payload.email };
   }
 }
+
+@Module({
+  controllers: [AuthRpcController],
+})
+class AuthModule {}
 ```
 
 ## RPC Parameter Decorators
@@ -41,7 +45,6 @@ Imperium supports server streaming RPC via `async function*`. ConnectRPC deliver
 ```ts
 import { RpcAbortSignal, RpcData, RpcMethod, RpcService } from "@smounters/imperium/decorators";
 import { EventsService } from "@proto/events_pb";
-import type { HandlerContext } from "@connectrpc/connect";
 
 @RpcService(EventsService)
 class EventsController {

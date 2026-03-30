@@ -3,7 +3,7 @@
 ## Controller and Routes
 
 ```ts
-import { Body, Get, HttpController, Param, Post, Query } from "@smounters/imperium/decorators";
+import { Body, Get, HttpController, Module, Param, Post, Query } from "@smounters/imperium/decorators";
 
 @HttpController("/users")
 class UsersHttpController {
@@ -22,6 +22,11 @@ class UsersHttpController {
     return payload;
   }
 }
+
+@Module({
+  httpControllers: [UsersHttpController],
+})
+class UsersModule {}
 ```
 
 ## Parameter Decorators
