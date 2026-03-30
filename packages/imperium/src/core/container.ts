@@ -14,6 +14,8 @@ import type {
   InterceptorLike,
   LoggerOptions,
   ModuleImport,
+  OnErrorCallback,
+  ErrorContext,
   ModuleMeta,
   OnApplicationBootstrap,
   OnApplicationShutdown,
@@ -234,6 +236,7 @@ export class AppContainer {
   private initialized = false;
   private closed = false;
   private exposeInternalErrors = false;
+  private onErrorCallback: OnErrorCallback | undefined;
 
   private globalGuards: GuardLike[] = [];
   private globalInterceptors: InterceptorLike[] = [];
@@ -717,6 +720,23 @@ export class AppContainer {
 
   shouldExposeInternalErrors(): boolean {
     return this.exposeInternalErrors;
+  }
+
+  setOnError(callback: OnErrorCallback): void {
+    this.onErrorCallback = callback;
+  }
+
+  getOnError(): OnErrorCallback | undefined {
+    return this.onErrorCallback;
+  }
+
+  reportError(error: unknown, context: ErrorContext): void {
+    if (!this.onErrorCallback) return;
+    try {
+      void this.onErrorCallback(error, context);
+    } catch {
+      // never let error reporter break the app
+    }
   }
 
   setConfig<TConfig extends Record<string, unknown>>(config: TConfig): void {

@@ -23,9 +23,14 @@ function patternToRegex(pattern: string): RegExp {
 export class EventService {
   private readonly handlers: RegisteredHandler[] = [];
   private logger: { error: (...args: unknown[]) => void } = console;
+  private onError?: (error: unknown, context: { type: "events"; handler: string; controller: string }) => void;
 
   setLogger(logger: { error: (...args: unknown[]) => void }): void {
     this.logger = logger;
+  }
+
+  setOnError(callback: (error: unknown, context: { type: "events"; handler: string; controller: string }) => void): void {
+    this.onError = callback;
   }
 
   /**
@@ -87,6 +92,11 @@ export class EventService {
             `failed for event "${event}":`,
           result.reason,
         );
+        this.onError?.(result.reason, {
+          type: "events",
+          handler: handler.methodName,
+          controller: handler.listenerName,
+        });
       }
     }
   }

@@ -5,10 +5,51 @@ import type { ZodType } from "zod";
 
 export type Constructor<T = unknown> = new (...args: any[]) => T;
 export type ContextType = "http" | "rpc" | "ws";
-export type LoggerOptions = ISettingsParam<Record<string, unknown>>;
 export type InjectionToken<T = unknown> = TsyringeInjectionToken<T>;
 export type MetadataKey = string | symbol;
 export type ShutdownSignal = "SIGINT" | "SIGTERM";
+
+// --- Logger ---
+
+export type LogLevel = "silly" | "trace" | "debug" | "info" | "warn" | "error" | "fatal";
+
+export interface LogEntry {
+  level: LogLevel;
+  message: string;
+  args: unknown[];
+  timestamp: Date;
+  name?: string;
+}
+
+export interface LogTransport {
+  log(entry: LogEntry): void;
+}
+
+/** Native imperium logger options (transport-based) */
+export interface ImperiumLoggerOptions {
+  name?: string;
+  minLevel?: LogLevel;
+  transports?: LogTransport[];
+}
+
+/** Legacy tslog options — still supported */
+export type TslogOptions = ISettingsParam<Record<string, unknown>>;
+
+/** Accepts either native imperium options or tslog settings */
+export type LoggerOptions = ImperiumLoggerOptions | TslogOptions;
+
+// --- Error Reporting ---
+
+export type ErrorContextType = "http" | "rpc" | "ws" | "cron" | "events";
+
+export interface ErrorContext {
+  type: ErrorContextType;
+  handler?: string;
+  controller?: string;
+  [key: string]: unknown;
+}
+
+export type OnErrorCallback = (error: unknown, context: ErrorContext) => void | Promise<void>;
 
 export interface ClassProvider<T = unknown> {
   provide: InjectionToken<T>;
@@ -208,5 +249,6 @@ export interface ServerOptions {
   health?: boolean | HealthOptions;
   gracefulShutdown?: boolean | GracefulShutdownOptions;
   loggerOptions?: LoggerOptions;
+  onError?: OnErrorCallback;
   config?: ConfigServiceOptions;
 }

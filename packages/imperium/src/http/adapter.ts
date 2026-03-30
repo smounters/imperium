@@ -20,19 +20,21 @@ interface HttpArgsBuildResult {
 function logHttpError(app: AppContainer, scope: RequestScope, details: Record<string, unknown>, error: unknown): void {
   try {
     scope.resolve(LoggerService).error(details, error);
-    return;
   } catch {
-    // fallback below
+    try {
+      app.getLogger().error(details, error);
+    } catch {
+      console.error("[imperium] http_error", details, error);
+    }
   }
 
-  try {
-    app.getLogger().error(details, error);
-    return;
-  } catch {
-    // final fallback
-  }
-
-  console.error("[imperium] http_error", details, error);
+  app.reportError(error, {
+    type: "http",
+    handler: details.handler as string | undefined,
+    controller: details.controller as string | undefined,
+    method: details.method as string | undefined,
+    url: details.url as string | undefined,
+  });
 }
 
 function resolveEnhancer<T>(scope: RequestScope, enhancer: Constructor<T> | T): T {

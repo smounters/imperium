@@ -2,8 +2,10 @@ import "reflect-metadata";
 import { Cron as CronerJob } from "croner";
 import { injectable } from "tsyringe";
 
-import type { CronJobMeta } from "./cron.decorators";
-import { CRON_JOBS_KEY } from "./cron.decorators";
+import type { CronJobMeta } from "./cron.decorators.js";
+import { CRON_JOBS_KEY } from "./cron.decorators.js";
+
+type ErrorReporter = (error: unknown, context: { type: "cron"; handler: string; controller: string }) => void;
 
 interface RegisteredJob {
   meta: CronJobMeta;
@@ -14,6 +16,16 @@ interface RegisteredJob {
 @injectable()
 export class CronService {
   private readonly jobs: RegisteredJob[] = [];
+  private logger: { error: (...args: unknown[]) => void } = console;
+  private onError?: ErrorReporter;
+
+  setLogger(logger: { error: (...args: unknown[]) => void }): void {
+    this.logger = logger;
+  }
+
+  setOnError(callback: ErrorReporter): void {
+    this.onError = callback;
+  }
 
   /**
    * Scan a provider instance for @Cron() decorated methods and register them.
@@ -38,7 +50,8 @@ export class CronService {
         try {
           await bound();
         } catch (error) {
-          console.error(`[imperium-cron] Job "${jobName}" failed:`, error);
+          this.logger.error(`[imperium-cron] Job "${jobName}" failed:`, error);
+          this.onError?.(error, { type: "cron", handler: jobName, controller: providerName });
         }
       });
 

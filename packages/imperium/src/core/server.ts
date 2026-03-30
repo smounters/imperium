@@ -228,6 +228,7 @@ export async function startServer(
     cors,
     health,
     loggerOptions,
+    onError,
     config,
   } = serverOptions;
 
@@ -240,6 +241,10 @@ export async function startServer(
   }
 
   di.setExposeInternalErrors(exposeInternalErrors);
+
+  if (onError) {
+    di.setOnError(onError);
+  }
 
   const listenPort = resolveListenPort(port, di.getConfig());
   const healthConfig = resolveHealth(health);

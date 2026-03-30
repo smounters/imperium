@@ -22,19 +22,20 @@ function logRpcError(
 ): void {
   try {
     scope.resolve(LoggerService).error(details, error);
-    return;
   } catch {
-    // fallback below
+    try {
+      app.getLogger().error(details, error);
+    } catch {
+      console.error("[imperium] rpc_error", details, error);
+    }
   }
 
-  try {
-    app.getLogger().error(details, error);
-    return;
-  } catch {
-    // final fallback
-  }
-
-  console.error("[imperium] rpc_error", details, error);
+  app.reportError(error, {
+    type: "rpc",
+    handler: details.handler as string | undefined,
+    controller: details.controller as string | undefined,
+    procedure: details.procedure as string | undefined,
+  });
 }
 
 function getPayloadValue(payload: unknown, key?: string): unknown {

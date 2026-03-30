@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { Module, Injectable, Inject } from "@smounters/imperium/decorators";
 import type { OnModuleInit, OnApplicationShutdown, Constructor } from "@smounters/imperium/core";
+import { LoggerService } from "@smounters/imperium/services";
 import type { DependencyContainer } from "tsyringe";
 
 import { CronService } from "./cron.service.js";
@@ -15,11 +16,14 @@ export interface CronModuleOptions {
 class CronBootstrap implements OnModuleInit, OnApplicationShutdown {
   constructor(
     private readonly cronService: CronService,
+    private readonly logger: LoggerService,
     @Inject(CRON_TARGETS) private readonly targets: Constructor[],
     @Inject("cron:container") private readonly container: DependencyContainer,
   ) {}
 
   onModuleInit(): void {
+    this.cronService.setLogger(this.logger);
+
     for (const target of this.targets) {
       const instance = this.container.resolve(target);
       this.cronService.registerProvider(instance as object, target.name);

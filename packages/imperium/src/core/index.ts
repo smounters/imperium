@@ -9,4 +9,6 @@ export {
   UnauthorizedException,
 } from "./errors.js";
 export { Reflector } from "./reflector.js";
+export { consoleTransport } from "./log-transport.js";
+export { ImperiumLogger } from "./imperium-logger.js";
 export type * from "../types.js";

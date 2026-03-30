@@ -104,19 +104,19 @@ function logWsError(
 ): void {
   try {
     scope.resolve(LoggerService).error(details, error);
-    return;
   } catch {
-    // fallback
+    try {
+      app.getLogger().error(details, error);
+    } catch {
+      console.error("[imperium] ws_error", details, error);
+    }
   }
 
-  try {
-    app.getLogger().error(details, error);
-    return;
-  } catch {
-    // final fallback
-  }
-
-  console.error("[imperium] ws_error", details, error);
+  app.reportError(error, {
+    type: "ws",
+    handler: details.type as string | undefined,
+    controller: details.gateway as string | undefined,
+  });
 }
 
 export function handleWsConnection(
