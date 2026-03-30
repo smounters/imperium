@@ -12,6 +12,8 @@ Runtime exports:
 - `APP_INTERCEPTOR`
 - `APP_FILTER`
 - `Reflector`
+- `consoleTransport` — built-in console log transport factory
+- `ImperiumLogger` — native transport-based logger
 - `HttpException`
 - `BadRequestException`
 - `UnauthorizedException`
@@ -24,7 +26,9 @@ Type exports (selected):
 - `ModuleMeta`, `DynamicModule`, `Provider`
 - `Guard`, `Interceptor`, `PipeTransform`, `ExceptionFilter`
 - lifecycle hooks: `OnModuleInit`, `OnApplicationBootstrap`, `OnModuleDestroy`, `BeforeApplicationShutdown`, `OnApplicationShutdown`
-- `ServerOptions`, `CorsOptions`, `HealthOptions`, `LoggerOptions`
+- `ServerOptions`, `CorsOptions`, `HealthOptions`
+- `LoggerOptions`, `ImperiumLoggerOptions`, `TslogOptions`, `LogLevel`, `LogEntry`, `LogTransport`
+- `OnErrorCallback`, `ErrorContext`, `ErrorContextType`
 - `BaseContext`, `ContextType`, `HttpArgumentsHost`, `RpcArgumentsHost`, `WsArgumentsHost`
 
 ## `@smounters/imperium/decorators`

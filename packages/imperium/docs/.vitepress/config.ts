@@ -27,6 +27,7 @@ export default defineConfig({
             { text: "WebSocket", link: "/guide/websocket" },
             { text: "Cron", link: "/guide/cron" },
             { text: "Events", link: "/guide/events" },
+            { text: "Logger Transports", link: "/guide/logger-transports" },
             { text: "Config and Logging", link: "/guide/config-and-logging" },
             { text: "Errors and Filters", link: "/guide/errors-and-filters" },
           ],
