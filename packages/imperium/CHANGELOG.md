@@ -2,6 +2,20 @@
 
 All notable changes to `@smounters/imperium` are documented in this file.
 
+## 1.1.3 - 2026-03-30
+
+### Added
+- VitePress documentation for `@smounters/imperium-cron` and `@smounters/imperium-events`.
+- Integration tests (16 tests across HTTP, guards, WebSocket, lifecycle).
+- ESM compatibility: all relative imports use `.js` extensions.
+
+### Changed
+- Migrated to `typescript-eslint` unified package with type-checked rules.
+- Modernized ESLint config (`recommendedTypeChecked` + `stylisticTypeChecked`).
+- Fixed floating promises, redundant types, unused imports.
+- Rewritten README for external users.
+- Monorepo restructure with pnpm workspaces.
+
 ## 1.1.0 - 2026-03-29
 
 ### Added
