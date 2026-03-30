@@ -1,94 +1,15 @@
 {
-  "name": "@smounters/imperium",
-  "version": "0.1.0",
-  "description": "NestJS-like modular DI container with unified HTTP + Connect RPC server for TypeScript",
-  "keywords": [
-    "di",
-    "dependency-injection",
-    "fastify",
-    "connectrpc",
-    "typescript"
-  ],
-  "license": "MIT",
-  "type": "module",
-  "exports": {
-    "./core": {
-      "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js"
-    },
-    "./decorators": {
-      "types": "./dist/decorators/index.d.ts",
-      "import": "./dist/decorators/index.js"
-    },
-    "./pipes": {
-      "types": "./dist/pipes/index.d.ts",
-      "import": "./dist/pipes/index.js"
-    },
-    "./services": {
-      "types": "./dist/services/index.d.ts",
-      "import": "./dist/services/index.js"
-    },
-    "./validation": {
-      "types": "./dist/validation/index.d.ts",
-      "import": "./dist/validation/index.js"
-    },
-    "./ws": {
-      "types": "./dist/ws/index.d.ts",
-      "import": "./dist/ws/index.js"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "CHANGELOG.md"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/smounters/imperium.git"
-  },
-  "bugs": {
-    "url": "https://github.com/smounters/imperium/issues"
-  },
-  "homepage": "https://smounters.github.io/imperium/",
-  "engines": {
-    "node": ">=20.0.0"
-  },
+  "name": "imperium-monorepo",
+  "private": true,
   "scripts": {
-    "build": "pnpm exec tsc -p tsconfig.json",
-    "typecheck": "pnpm exec tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "format": "prettier . --write",
-    "format:check": "prettier . --check",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "clean": "rm -rf dist",
-    "docs:dev": "pnpm exec vitepress dev docs",
-    "docs:build": "pnpm exec vitepress build docs",
-    "docs:preview": "pnpm exec vitepress preview docs",
-    "prepack": "pnpm run clean && pnpm run build",
-    "prepublishOnly": "pnpm run clean && pnpm run build"
-  },
-  "peerDependencies": {
-    "@connectrpc/connect": "^2.1.1",
-    "@connectrpc/connect-fastify": "^2.1.1",
-    "@fastify/cors": "^11.2.0",
-    "@fastify/websocket": "^11.0.0",
-    "fastify": "^5.7.4",
-    "reflect-metadata": "^0.2.2",
-    "tslog": "^4.10.2",
-    "tsyringe": "^4.10.0",
-    "typescript": "^5.9.3",
-    "zod": "^4.3.6"
-  },
-  "peerDependenciesMeta": {
-    "@fastify/websocket": {
-      "optional": true
-    }
+    "build": "pnpm --filter @smounters/imperium run build && pnpm --filter !@smounters/imperium -r run build",
+    "typecheck": "pnpm --filter @smounters/imperium run build && pnpm -r run typecheck",
+    "lint": "pnpm -r run lint",
+    "lint:fix": "pnpm -r run lint:fix",
+    "test": "pnpm --filter @smounters/imperium run build && pnpm -r run test",
+    "clean": "pnpm -r run clean",
+    "docs:dev": "pnpm --filter @smounters/imperium docs:dev",
+    "docs:build": "pnpm --filter @smounters/imperium docs:build"
   },
   "devDependencies": {
     "@connectrpc/connect": "^2.1.1",

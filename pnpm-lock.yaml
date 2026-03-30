@@ -72,6 +72,55 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
 
+  packages/imperium:
+    dependencies:
+      '@connectrpc/connect':
+        specifier: ^2.1.1
+        version: 2.1.1(@bufbuild/protobuf@2.11.0)
+      '@connectrpc/connect-fastify':
+        specifier: ^2.1.1
+        version: 2.1.1(@bufbuild/protobuf@2.11.0)(@connectrpc/connect-node@2.1.1(@bufbuild/protobuf@2.11.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.11.0)))(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.11.0))(fastify@5.8.4)
+      '@fastify/cors':
+        specifier: ^11.2.0
+        version: 11.2.0
+      '@fastify/websocket':
+        specifier: ^11.0.0
+        version: 11.2.0
+      fastify:
+        specifier: ^5.7.4
+        version: 5.8.4
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      tslog:
+        specifier: ^4.10.2
+        version: 4.10.2
+      tsyringe:
+        specifier: ^4.10.0
+        version: 4.10.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
+
+  packages/imperium-cron:
+    dependencies:
+      croner:
+        specifier: ^10.0.1
+        version: 10.0.1
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      tsyringe:
+        specifier: ^4.10.0
+        version: 4.10.0
+    devDependencies:
+      '@smounters/imperium':
+        specifier: workspace:*
+        version: link:../imperium
+
 packages:
 
   '@algolia/abtesting@1.16.0':
@@ -1034,6 +1083,10 @@ packages:
   copy-anything@4.0.5:
     resolution: {integrity: sha512-7Vv6asjS4gMOuILabD3l739tsaxFQmC+a7pLZm02zyvs8p977bL3zEgq3yDk5rn9B0PbYgIv++jmHcuUab4RhA==}
     engines: {node: '>=18'}
+
+  croner@10.0.1:
+    resolution: {integrity: sha512-ixNtAJndqh173VQ4KodSdJEI6nuioBWI0V1ITNKhZZsO0pEMoDxz539T4FTTbSZ/xIOSuDnzxLVRqBVSvPNE2g==}
+    engines: {node: '>=18.0'}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -2770,6 +2823,8 @@ snapshots:
   copy-anything@4.0.5:
     dependencies:
       is-what: 5.5.0
+
+  croner@10.0.1: {}
 
   cross-spawn@7.0.6:
     dependencies:

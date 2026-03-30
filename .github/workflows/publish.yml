@@ -1,11 +1,12 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 
-name: Publish Imperium
+name: Publish
 
 on:
   push:
     tags:
       - "v*.*.*"
+      - "*/v*.*.*"
 
 permissions:
   contents: write
@@ -13,12 +14,39 @@ permissions:
   pages: write
 
 concurrency:
-  group: imperium-publish-${{ github.ref }}
+  group: publish-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  publish_package:
-    name: Publish npm package
+  detect:
+    name: Detect package to publish
+    runs-on: ubuntu-latest
+    outputs:
+      package: ${{ steps.detect.outputs.package }}
+      version: ${{ steps.detect.outputs.version }}
+      filter: ${{ steps.detect.outputs.filter }}
+    steps:
+      - name: Parse tag
+        id: detect
+        run: |
+          tag="${GITHUB_REF_NAME}"
+
+          if [[ "$tag" =~ ^v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+            echo "package=@smounters/imperium" >> "$GITHUB_OUTPUT"
+            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "filter=@smounters/imperium" >> "$GITHUB_OUTPUT"
+          elif [[ "$tag" =~ ^imperium-cron/v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+            echo "package=@smounters/imperium-cron" >> "$GITHUB_OUTPUT"
+            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "filter=@smounters/imperium-cron" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Unknown tag format '${tag}'. Use vX.Y.Z or imperium-cron/vX.Y.Z"
+            exit 1
+          fi
+
+  publish:
+    name: Publish ${{ needs.detect.outputs.package }}
+    needs: detect
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -36,39 +64,33 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - name: Install dependencies from lockfile
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Resolve package version from git tag
-        id: release
-        run: |
-          tag="${GITHUB_REF_NAME}"
-          version="${tag#v}"
+      - name: Sync version
+        run: pnpm --filter "${{ needs.detect.outputs.filter }}" exec pnpm version "${{ needs.detect.outputs.version }}" --no-git-tag-version --allow-same-version
 
-          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
-            echo "::error::Invalid tag '${tag}'. Use vX.Y.Z."
-            exit 1
-          fi
+      - name: Build core (required by all packages)
+        run: pnpm --filter @smounters/imperium run build
 
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Typecheck
+        run: pnpm --filter "${{ needs.detect.outputs.filter }}" run typecheck
 
-      - name: Sync package.json version with tag
-        run: pnpm version "${{ steps.release.outputs.version }}" --no-git-tag-version --allow-same-version
+      - name: Test
+        run: pnpm --filter "${{ needs.detect.outputs.filter }}" run test
 
-      - name: Run typecheck
-        run: pnpm run typecheck
+      - name: Build
+        run: pnpm --filter "${{ needs.detect.outputs.filter }}" run build
 
-      - name: Build package
-        run: pnpm run build
-
-      - name: Publish package to npm
-        run: npm publish --access public
+      - name: Publish to npm
+        run: pnpm --filter "${{ needs.detect.outputs.filter }}" publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  build_docs:
-    name: Build documentation
-    needs: publish_package
+  docs:
+    name: Build & deploy docs
+    needs: [detect, publish]
+    if: needs.detect.outputs.package == '@smounters/imperium'
     runs-on: ubuntu-latest
     env:
       DOCS_BASE: /${{ github.event.repository.name }}/
@@ -87,36 +109,33 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Install dependencies from lockfile
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build VitePress docs
+      - name: Build docs
         run: pnpm run docs:build
 
-      - name: Upload docs artifact for GitHub Pages
+      - name: Upload docs artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          path: packages/imperium/docs/.vitepress/dist
 
   deploy_docs:
-    name: Deploy documentation
-    needs: build_docs
+    name: Deploy docs
+    needs: docs
     runs-on: ubuntu-latest
     environment:
       name: github-pages
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
 
-  create_release:
-    name: Create GitHub release
-    needs:
-      - publish_package
-      - deploy_docs
+  release:
+    name: Create release
+    needs: [detect, publish]
     runs-on: ubuntu-latest
     steps:
-      - name: Create release from tag
+      - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
