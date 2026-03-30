@@ -13,7 +13,6 @@ export default defineConfig({
     nav: [
       { text: "Guide", link: "/guide/getting-started" },
       { text: "Reference", link: "/reference/api-surface" },
-      { text: "Publishing", link: "/reference/publishing" },
     ],
     sidebar: {
       "/guide/": [
@@ -37,7 +36,6 @@ export default defineConfig({
           items: [
             { text: "API Surface", link: "/reference/api-surface" },
             { text: "Server Options", link: "/reference/server-options" },
-            { text: "Publishing", link: "/reference/publishing" },
           ],
         },
       ],
