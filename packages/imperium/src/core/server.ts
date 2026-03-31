@@ -355,10 +355,10 @@ export async function startServer(
     }
 
     if (healthConfig.enabled) {
-      const healthUrl = mergePrefixes(effectiveHttpPrefix, healthConfig.path);
+      const healthUrl = healthConfig.path || "/health";
 
-      server.get(healthUrl || "/", async (_req, reply) => {
-        const result = await runHealthCheck(healthConfig.check, exposeInternalErrors, appLogger, healthUrl || "/");
+      server.get(healthUrl, async (_req, reply) => {
+        const result = await runHealthCheck(healthConfig.check, exposeInternalErrors, appLogger, healthUrl);
         reply.status(result.ok ? 200 : 503).send({
           status: result.ok ? "ok" : "error",
           type: "health",
