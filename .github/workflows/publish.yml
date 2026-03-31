@@ -64,7 +64,7 @@ jobs:
         package: ${{ fromJson(needs.detect.outputs.packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -110,7 +110,7 @@ jobs:
       DOCS_BASE: /${{ github.event.repository.name }}/
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -130,7 +130,7 @@ jobs:
         run: pnpm run docs:build
 
       - name: Upload docs artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: packages/imperium/docs/.vitepress/dist
 
