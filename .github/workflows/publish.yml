@@ -12,7 +12,6 @@ on:
 permissions:
   contents: write
   id-token: write
-  pages: write
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -33,7 +32,6 @@ jobs:
           tag="${GITHUB_REF_NAME}"
 
           if [[ "$tag" =~ ^all/v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
-            # Publish ALL packages with the same version
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
             echo 'packages=["@smounters/imperium","@smounters/imperium-cron","@smounters/imperium-events"]' >> "$GITHUB_OUTPUT"
             echo "publish_docs=true" >> "$GITHUB_OUTPUT"
@@ -102,12 +100,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   docs:
-    name: Build & deploy docs
+    name: Deploy docs to GitHub Pages
     needs: [detect, publish]
     if: needs.detect.outputs.publish_docs == 'true'
     runs-on: ubuntu-latest
-    env:
-      DOCS_BASE: /${{ github.event.repository.name }}/
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -127,22 +123,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build docs
+        env:
+          DOCS_BASE: /${{ github.event.repository.name }}/
         run: pnpm run docs:build
 
-      - name: Upload docs artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: packages/imperium/docs/.vitepress/dist
-
-  deploy_docs:
-    name: Deploy docs
-    needs: docs
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-    steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: packages/imperium/docs/.vitepress/dist
 
   release:
     name: Create release
