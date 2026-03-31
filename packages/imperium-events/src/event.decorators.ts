@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-export const ON_EVENT_KEY = Symbol("events:handlers");
+export const ON_EVENT_KEY = Symbol.for("imperium:events:handlers");
 
 export interface EventHandlerMeta {
   pattern: string;

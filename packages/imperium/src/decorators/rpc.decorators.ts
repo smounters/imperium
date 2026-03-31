@@ -8,9 +8,11 @@ import type {
 } from "../core/types.js";
 import { Injectable } from "./di.decorators.js";
 
-export const RPC_SERVICE_KEY = Symbol("rpc:service");
-export const RPC_METHODS_KEY = Symbol("rpc:methods");
-export const RPC_PARAMS_KEY = Symbol("rpc:params");
+// Symbol.for() ensures a single global symbol even if the module is loaded
+// from multiple paths (e.g. duplicate installs, hoisted vs nested node_modules).
+export const RPC_SERVICE_KEY = Symbol.for("imperium:rpc:service");
+export const RPC_METHODS_KEY = Symbol.for("imperium:rpc:methods");
+export const RPC_PARAMS_KEY = Symbol.for("imperium:rpc:params");
 
 export function RpcService(service: RpcServiceDescriptor): ClassDecorator {
   return (target) => {

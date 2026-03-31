@@ -1,6 +1,6 @@
 {
   "name": "@smounters/imperium",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "description": "NestJS-like modular DI container with unified HTTP + Connect RPC server for TypeScript",
   "keywords": ["di", "dependency-injection", "fastify", "connectrpc", "typescript"],
   "license": "MIT",

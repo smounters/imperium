@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-export const CRON_JOBS_KEY = Symbol("cron:jobs");
+export const CRON_JOBS_KEY = Symbol.for("imperium:cron:jobs");
 
 export interface CronJobMeta {
   cronExpression: string;

@@ -1,1 +1,1 @@
-export const CONFIG_TOKEN = Symbol("app:config");
+export const CONFIG_TOKEN = Symbol.for("imperium:app:config");

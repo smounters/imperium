@@ -3,8 +3,8 @@ import type { Constructor, ExceptionFilterLike } from "../types.js";
 import { Injectable } from "./di.decorators.js";
 import { appendArrayMetadata } from "./metadata.decorators.js";
 
-export const FILTERS_KEY = Symbol("filters");
-export const CATCH_EXCEPTIONS_KEY = Symbol("filter:exceptions");
+export const FILTERS_KEY = Symbol.for("imperium:filters");
+export const CATCH_EXCEPTIONS_KEY = Symbol.for("imperium:filter:exceptions");
 
 export function UseFilters(...filters: ExceptionFilterLike[]): ClassDecorator & MethodDecorator {
   return (target: object, propertyKey?: string | symbol) => {

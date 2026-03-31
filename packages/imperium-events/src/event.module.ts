@@ -5,7 +5,7 @@ import type { DependencyContainer } from "tsyringe";
 
 import { EventService } from "./event.service.js";
 
-const EVENT_LISTENERS_TOKEN = Symbol("events:listeners");
+const EVENT_LISTENERS_TOKEN = Symbol.for("imperium:events:listeners");
 
 export interface EventModuleOptions {
   /**

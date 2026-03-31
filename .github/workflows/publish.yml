@@ -7,6 +7,7 @@ on:
     tags:
       - "v*.*.*"
       - "*/v*.*.*"
+      - "all/v*.*.*"
 
 permissions:
   contents: write
@@ -19,39 +20,48 @@ concurrency:
 
 jobs:
   detect:
-    name: Detect package to publish
+    name: Detect packages to publish
     runs-on: ubuntu-latest
     outputs:
-      package: ${{ steps.detect.outputs.package }}
+      packages: ${{ steps.detect.outputs.packages }}
       version: ${{ steps.detect.outputs.version }}
-      filter: ${{ steps.detect.outputs.filter }}
+      publish_docs: ${{ steps.detect.outputs.publish_docs }}
     steps:
       - name: Parse tag
         id: detect
         run: |
           tag="${GITHUB_REF_NAME}"
 
-          if [[ "$tag" =~ ^v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
-            echo "package=@smounters/imperium" >> "$GITHUB_OUTPUT"
+          if [[ "$tag" =~ ^all/v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+            # Publish ALL packages with the same version
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-            echo "filter=@smounters/imperium" >> "$GITHUB_OUTPUT"
+            echo 'packages=["@smounters/imperium","@smounters/imperium-cron","@smounters/imperium-events"]' >> "$GITHUB_OUTPUT"
+            echo "publish_docs=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$tag" =~ ^v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
+            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo 'packages=["@smounters/imperium"]' >> "$GITHUB_OUTPUT"
+            echo "publish_docs=true" >> "$GITHUB_OUTPUT"
           elif [[ "$tag" =~ ^imperium-cron/v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
-            echo "package=@smounters/imperium-cron" >> "$GITHUB_OUTPUT"
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-            echo "filter=@smounters/imperium-cron" >> "$GITHUB_OUTPUT"
+            echo 'packages=["@smounters/imperium-cron"]' >> "$GITHUB_OUTPUT"
+            echo "publish_docs=false" >> "$GITHUB_OUTPUT"
           elif [[ "$tag" =~ ^imperium-events/v([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then
-            echo "package=@smounters/imperium-events" >> "$GITHUB_OUTPUT"
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-            echo "filter=@smounters/imperium-events" >> "$GITHUB_OUTPUT"
+            echo 'packages=["@smounters/imperium-events"]' >> "$GITHUB_OUTPUT"
+            echo "publish_docs=false" >> "$GITHUB_OUTPUT"
           else
-            echo "::error::Unknown tag format '${tag}'. Use vX.Y.Z, imperium-cron/vX.Y.Z, or imperium-events/vX.Y.Z"
+            echo "::error::Unknown tag format '${tag}'. Use vX.Y.Z, imperium-cron/vX.Y.Z, imperium-events/vX.Y.Z, or all/vX.Y.Z"
             exit 1
           fi
 
   publish:
-    name: Publish ${{ needs.detect.outputs.package }}
+    name: Publish ${{ matrix.package }}
     needs: detect
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        package: ${{ fromJson(needs.detect.outputs.packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -72,29 +82,29 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Sync version
-        run: pnpm --filter "${{ needs.detect.outputs.filter }}" exec pnpm version "${{ needs.detect.outputs.version }}" --no-git-tag-version --allow-same-version
+        run: pnpm --filter "${{ matrix.package }}" exec pnpm version "${{ needs.detect.outputs.version }}" --no-git-tag-version --allow-same-version
 
       - name: Build core (required by all packages)
         run: pnpm --filter @smounters/imperium run build
 
       - name: Typecheck
-        run: pnpm --filter "${{ needs.detect.outputs.filter }}" run typecheck
+        run: pnpm --filter "${{ matrix.package }}" run typecheck
 
       - name: Test
-        run: pnpm --filter "${{ needs.detect.outputs.filter }}" run test
+        run: pnpm --filter "${{ matrix.package }}" run test
 
       - name: Build
-        run: pnpm --filter "${{ needs.detect.outputs.filter }}" run build
+        run: pnpm --filter "${{ matrix.package }}" run build
 
       - name: Publish to npm
-        run: pnpm --filter "${{ needs.detect.outputs.filter }}" publish --access public --no-git-checks
+        run: pnpm --filter "${{ matrix.package }}" publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   docs:
     name: Build & deploy docs
     needs: [detect, publish]
-    if: needs.detect.outputs.package == '@smounters/imperium'
+    if: needs.detect.outputs.publish_docs == 'true'
     runs-on: ubuntu-latest
     env:
       DOCS_BASE: /${{ github.event.repository.name }}/

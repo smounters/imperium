@@ -2,9 +2,9 @@ import "reflect-metadata";
 import type { HttpMethod, HttpParamMeta, HttpParamSource, HttpRouteMeta } from "../core/types.js";
 import { Injectable } from "./di.decorators.js";
 
-export const HTTP_ROUTES_KEY = Symbol("http:routes");
-export const HTTP_CONTROLLER_KEY = Symbol("http:controller");
-export const PARAMS_KEY = Symbol("http:params");
+export const HTTP_ROUTES_KEY = Symbol.for("imperium:http:routes");
+export const HTTP_CONTROLLER_KEY = Symbol.for("imperium:http:controller");
+export const PARAMS_KEY = Symbol.for("imperium:http:params");
 
 export function HttpController(prefix = ""): ClassDecorator {
   return (target) => {

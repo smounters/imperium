@@ -2,9 +2,9 @@ import "reflect-metadata";
 import type { WsGatewayMeta, WsHandlerMeta, WsParamMeta, WsParamSource } from "../ws/types.js";
 import { Injectable } from "./di.decorators.js";
 
-export const WS_GATEWAY_KEY = Symbol("ws:gateway");
-export const WS_HANDLERS_KEY = Symbol("ws:handlers");
-export const WS_PARAMS_KEY = Symbol("ws:params");
+export const WS_GATEWAY_KEY = Symbol.for("imperium:ws:gateway");
+export const WS_HANDLERS_KEY = Symbol.for("imperium:ws:handlers");
+export const WS_PARAMS_KEY = Symbol.for("imperium:ws:params");
 
 export function WsGateway(path = "/ws"): ClassDecorator {
   return (target) => {

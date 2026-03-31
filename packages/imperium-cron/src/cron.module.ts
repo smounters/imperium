@@ -6,7 +6,7 @@ import type { DependencyContainer } from "tsyringe";
 
 import { CronService } from "./cron.service.js";
 
-const CRON_TARGETS = Symbol("cron:targets");
+const CRON_TARGETS = Symbol.for("imperium:cron:targets");
 
 export interface CronModuleOptions {
   providers: Constructor[];

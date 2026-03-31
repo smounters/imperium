@@ -1,6 +1,6 @@
 {
   "name": "@smounters/imperium-events",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typed event emitter for @smounters/imperium",
   "keywords": ["events", "event-emitter", "imperium", "nestjs-like", "typescript"],
   "license": "MIT",
@@ -30,7 +30,7 @@
     "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "peerDependencies": {
-    "@smounters/imperium": "^1.1.0",
+    "@smounters/imperium": "^1.2.1",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.10.0"
   },

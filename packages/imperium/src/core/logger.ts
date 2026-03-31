@@ -7,7 +7,7 @@ type LoggerPayload = Record<string, unknown>;
 
 export type AppLogger = Logger<LoggerPayload> | ImperiumLogger;
 
-export const LOGGER_TOKEN = Symbol("app:logger");
+export const LOGGER_TOKEN = Symbol.for("imperium:app:logger");
 
 const DEFAULT_TSLOG_OPTIONS = {
   name: "app",
