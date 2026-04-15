@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { AppContainer } from "../core/container.js";
 import type { HttpParamMeta } from "../core/types.js";
-import { LoggerService } from "../services/index.js";
 import type { BaseContext, Constructor, ExceptionFilter, Guard, Interceptor, PipeTransform } from "../types.js";
 
 import { ForbiddenException, toHttpError } from "../core/errors.js";
@@ -17,17 +16,7 @@ interface HttpArgsBuildResult {
   metasByIndex: Map<number, HttpParamMeta>;
 }
 
-function logHttpError(app: AppContainer, scope: RequestScope, details: Record<string, unknown>, error: unknown): void {
-  try {
-    scope.resolve(LoggerService).error(details, error);
-  } catch {
-    try {
-      app.getLogger().error(details, error);
-    } catch {
-      console.error("[imperium] http_error", details, error);
-    }
-  }
-
+function reportHttpError(app: AppContainer, details: Record<string, unknown>, error: unknown): void {
   app.reportError(error, {
     type: "http",
     handler: details.handler as string | undefined,
@@ -253,11 +242,9 @@ export function createHttpHandler<TController extends Record<string, unknown>>(
           reply.send(result);
         }
       } catch (error) {
-        logHttpError(
+        reportHttpError(
           app,
-          requestScope,
           {
-            type: "http_error",
             method: req.method,
             url: req.url,
             controller: controller.name,

@@ -7,29 +7,13 @@ import { ForbiddenException, toConnectError } from "../core/errors.js";
 import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators.js";
 import { RPC_PARAMS_KEY } from "../decorators/rpc.decorators.js";
 import type { BaseContext, Constructor, ExceptionFilter, Guard, Interceptor, PipeTransform } from "../types.js";
-import { LoggerService } from "../services/index.js";
 
 import { collectFiltersForRpc, collectGuardsForRpc, collectInterceptorsForRpc, collectPipesForRpc } from "./utils.js";
 
 type RpcResponse = Record<string, unknown>;
 type RpcRequestScope = ReturnType<AppContainer["createRequestScope"]>;
 
-function logRpcError(
-  app: AppContainer,
-  scope: RpcRequestScope,
-  details: Record<string, unknown>,
-  error: unknown,
-): void {
-  try {
-    scope.resolve(LoggerService).error(details, error);
-  } catch {
-    try {
-      app.getLogger().error(details, error);
-    } catch {
-      console.error("[imperium] rpc_error", details, error);
-    }
-  }
-
+function reportRpcError(app: AppContainer, details: Record<string, unknown>, error: unknown): void {
   app.reportError(error, {
     type: "rpc",
     handler: details.handler as string | undefined,
@@ -223,11 +207,9 @@ export function createRpcHandler<TController extends Record<string, unknown>>(
 
         return next();
       } catch (error) {
-        logRpcError(
+        reportRpcError(
           app,
-          scope,
           {
-            type: "rpc_error",
             controller: controller.name,
             handler: methodName,
             procedure: context.method.name,
@@ -252,11 +234,9 @@ export function createRpcHandler<TController extends Record<string, unknown>>(
         try {
           await app.disposeRequestScope(scope);
         } catch (disposeError) {
-          logRpcError(
+          reportRpcError(
             app,
-            scope,
             {
-              type: "rpc_scope_dispose_error",
               controller: controller.name,
               handler: methodName,
               procedure: context.method.name,

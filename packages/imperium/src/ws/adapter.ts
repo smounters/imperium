@@ -7,7 +7,6 @@ import type { AppContainer } from "../core/container.js";
 import { GUARDS_KEY } from "../decorators/guards.decorators.js";
 import { WS_HANDLERS_KEY, WS_PARAMS_KEY } from "../decorators/ws.decorators.js";
 import { Reflector } from "../core/reflector.js";
-import { LoggerService } from "../services/index.js";
 import type { BaseContext, Constructor, Guard, GuardLike, WsArgumentsHost } from "../types.js";
 import type { WsGatewayLifecycle, WsHandlerMeta, WsParamMeta } from "./types.js";
 
@@ -96,22 +95,7 @@ function buildWsContext(
   };
 }
 
-function logWsError(
-  app: AppContainer,
-  scope: RequestScope,
-  details: Record<string, unknown>,
-  error: unknown,
-): void {
-  try {
-    scope.resolve(LoggerService).error(details, error);
-  } catch {
-    try {
-      app.getLogger().error(details, error);
-    } catch {
-      console.error("[imperium] ws_error", details, error);
-    }
-  }
-
+function reportWsError(app: AppContainer, details: Record<string, unknown>, error: unknown): void {
   app.reportError(error, {
     type: "ws",
     handler: details.type as string | undefined,
@@ -165,7 +149,7 @@ export function handleWsConnection(
           const args = buildWsArgs(socket, request, msg.data, handlerFn);
           await handlerFn.apply(instance, args);
         } catch (error) {
-          logWsError(app, scope, {
+          reportWsError(app, {
             type: "ws_message_error",
             gateway: gateway.name,
           }, error);
@@ -181,7 +165,7 @@ export function handleWsConnection(
             await instance.onDisconnect(socket);
           }
         } catch (error) {
-          logWsError(app, scope, {
+          reportWsError(app, {
             type: "ws_disconnect_error",
             gateway: gateway.name,
           }, error);
@@ -189,7 +173,7 @@ export function handleWsConnection(
           try {
             await app.disposeRequestScope(scope);
           } catch (error) {
-            logWsError(app, scope, {
+            reportWsError(app, {
               type: "ws_scope_dispose_error",
               gateway: gateway.name,
             }, error);
@@ -200,7 +184,7 @@ export function handleWsConnection(
   };
 
   runAsync().catch((error) => {
-    logWsError(app, scope, {
+    reportWsError(app, {
       type: "ws_connection_error",
       gateway: gateway.name,
     }, error);

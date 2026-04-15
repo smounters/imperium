@@ -7,28 +7,12 @@ import { ForbiddenException, toConnectError } from "../core/errors.js";
 import { CATCH_EXCEPTIONS_KEY } from "../decorators/filters.decorators.js";
 import { RPC_PARAMS_KEY } from "../decorators/rpc.decorators.js";
 import type { BaseContext, Constructor, ExceptionFilter, Guard, PipeTransform } from "../types.js";
-import { LoggerService } from "../services/index.js";
 
 import { collectFiltersForRpc, collectGuardsForRpc, collectPipesForRpc } from "./utils.js";
 
 type RpcRequestScope = ReturnType<AppContainer["createRequestScope"]>;
 
-function logRpcError(
-  app: AppContainer,
-  scope: RpcRequestScope,
-  details: Record<string, unknown>,
-  error: unknown,
-): void {
-  try {
-    scope.resolve(LoggerService).error(details, error);
-  } catch {
-    try {
-      app.getLogger().error(details, error);
-    } catch {
-      console.error("[imperium] rpc_streaming_error", details, error);
-    }
-  }
-
+function reportRpcError(app: AppContainer, details: Record<string, unknown>, error: unknown): void {
   app.reportError(error, {
     type: "rpc",
     handler: details.handler as string | undefined,
@@ -210,11 +194,9 @@ export function createStreamingRpcHandler<TController extends Record<string, unk
 
       yield* generator;
     } catch (error) {
-      logRpcError(
+      reportRpcError(
         app,
-        scope,
         {
-          type: "rpc_streaming_error",
           controller: controller.name,
           handler: methodName,
           procedure: context.method.name,
@@ -239,11 +221,9 @@ export function createStreamingRpcHandler<TController extends Record<string, unk
       try {
         await app.disposeRequestScope(scope);
       } catch (disposeError) {
-        logRpcError(
+        reportRpcError(
           app,
-          scope,
           {
-            type: "rpc_streaming_scope_dispose_error",
             controller: controller.name,
             handler: methodName,
             procedure: context.method.name,
