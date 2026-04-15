@@ -205,7 +205,7 @@ export function createRpcHandler<TController extends Record<string, unknown>>(
           return controllerHandler(...args);
         };
 
-        return next();
+        return await next();
       } catch (error) {
         reportRpcError(
           app,
