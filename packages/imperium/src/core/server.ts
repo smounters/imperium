@@ -368,6 +368,30 @@ export async function startServer(
     }
 
     if (http) {
+      server.addContentTypeParser(
+        "application/x-www-form-urlencoded",
+        { parseAs: "string" },
+        (_req, body, done) => {
+          try {
+            const params = new URLSearchParams(body as string);
+            const result: Record<string, string | string[]> = {};
+            for (const [key, value] of params) {
+              const existing = result[key];
+              if (existing === undefined) {
+                result[key] = value;
+              } else if (Array.isArray(existing)) {
+                existing.push(value);
+              } else {
+                result[key] = [existing, value];
+              }
+            }
+            done(null, result);
+          } catch (err) {
+            done(err as Error, undefined);
+          }
+        },
+      );
+
       registerHttpRoutes(server, di, effectiveHttpPrefix);
     }
 
