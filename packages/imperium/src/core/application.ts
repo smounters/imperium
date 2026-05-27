@@ -9,7 +9,7 @@ import type {
 } from "../types.js";
 import type { ZodType, output } from "zod";
 import { AppContainer } from "./container.js";
-import { startServer } from "./server.js";
+import { type HookEntry, startServer } from "./server.js";
 
 interface ResolvedGracefulShutdownOptions {
   enabled: boolean;
@@ -26,6 +26,7 @@ export class Application {
   private readonly di: AppContainer;
   private options: ServerOptions;
   private readonly signalHandlers = new Map<ShutdownSignal, () => void>();
+  private readonly hooks: HookEntry[] = [];
   private moduleLoaded = false;
   private loggerConfiguredExplicitly = false;
 
@@ -82,6 +83,12 @@ export class Application {
     return this;
   }
 
+  addHook(name: string, handler: (...args: any[]) => unknown): this {
+    this.assertConfigurable("add hook");
+    this.hooks.push([name, handler]);
+    return this;
+  }
+
   configureLogger(options?: LoggerOptions): this {
     this.assertConfigurable("configure logger");
     this.di.configureLogger(options);
@@ -126,7 +133,7 @@ export class Application {
 
     this.startPromise = (async () => {
       this.ensureModuleLoaded();
-      const server = await startServer(this.di, startOptions);
+      const server = await startServer(this.di, startOptions, this.hooks);
       this.server = server;
       this.installSignalHandlers(startOptions);
       return server;

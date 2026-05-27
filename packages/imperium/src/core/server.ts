@@ -18,6 +18,8 @@ type LegacyServerOptions = ServerOptions & { di: AppContainer };
 type CorsPluginOptions = Omit<CorsOptions, "enabled">;
 type AppLogger = ReturnType<AppContainer["getLogger"]>;
 
+export type HookEntry = [name: string, handler: (...args: any[]) => unknown];
+
 interface HealthCheckStatus {
   ok: boolean;
   details?: unknown;
@@ -196,11 +198,12 @@ async function runHealthCheck(
   }
 }
 
-export function startServer(di: AppContainer, options: ServerOptions): Promise<FastifyInstance>;
+export function startServer(di: AppContainer, options: ServerOptions, hooks?: HookEntry[]): Promise<FastifyInstance>;
 export function startServer(options: LegacyServerOptions): Promise<FastifyInstance>;
 export async function startServer(
   diOrOptions: AppContainer | LegacyServerOptions,
   options?: ServerOptions,
+  hooks?: HookEntry[],
 ): Promise<FastifyInstance> {
   const di = diOrOptions instanceof AppContainer ? diOrOptions : diOrOptions.di;
   const serverOptions = diOrOptions instanceof AppContainer ? options : diOrOptions;
@@ -285,6 +288,12 @@ export async function startServer(
     const corsConfig = resolveCors(cors);
     const effectiveHttpPrefix = mergePrefixes(prefix, httpPrefix);
     const effectiveRpcPrefix = mergePrefixes(prefix, rpcPrefix);
+
+    if (hooks) {
+      for (const [name, handler] of hooks) {
+        server.addHook(name as any, handler as any);
+      }
+    }
 
     server.addHook("onRequest", (req, _reply, done) => {
       const request = req as RequestWithScope;
